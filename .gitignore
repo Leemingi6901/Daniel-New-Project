@@ -35,3 +35,5 @@ BOOTSTRAP.md
 MEMORY.md
 memory/
 openclaw-workspace-state.json
+.vercel
+.env*

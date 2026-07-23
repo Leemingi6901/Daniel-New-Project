@@ -4,9 +4,10 @@
 
 ## 프로젝트 개요
 
-- 이름: Daniel New Project
-- 상태: 초기 설정 단계 (스택 미정)
+- 이름: Daniel Tech Wiki — IT 신기술 학습 위키 (공개 참고용)
+- 스택: Next.js 16 App Router + 마크다운 콘텐츠(`content/`), Vercel 배포
 - 저장소: GitHub private repo (Leemingi6901/Daniel-New-Project)
+- 주의: Next.js 16은 async params 필수 (`await params`), middleware 대신 proxy.ts
 
 ## 규칙
 

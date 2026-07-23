@@ -1,0 +1,23 @@
+# Dependencies
+node_modules/
+
+# Environment / secrets
+.env
+.env.*
+!.env.example
+
+# OS
+.DS_Store
+
+# Editor / tools
+.vscode/
+.idea/
+.claude/settings.local.json
+
+# Build output
+dist/
+build/
+out/
+
+# Logs
+*.log

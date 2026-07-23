@@ -2,6 +2,8 @@
 
 IT 신기술을 공부하며 정리하는 학습 위키입니다. 개인 학습 기록이지만 누구나 참고할 수 있습니다.
 
+**Live**: https://daniel-tech-wiki-korea97.vercel.app
+
 ## 스택
 
 - Next.js 16 (App Router, SSG)

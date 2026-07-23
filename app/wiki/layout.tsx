@@ -7,7 +7,7 @@ export default function WikiLayout({ children }: { children: React.ReactNode }) 
       <header className="site-header">
         <div className="header-inner">
           <Link href="/" className="logo">
-            📘 Daniel <span>Tech Wiki</span>
+            Daniel<span>.wiki</span>
           </Link>
           <nav className="header-nav">
             <a href="https://leemingi6901.github.io" target="_blank" rel="noreferrer">

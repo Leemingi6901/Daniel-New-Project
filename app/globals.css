@@ -1,13 +1,13 @@
-@import "highlight.js/styles/github.css";
+@import "highlight.js/styles/github-dark.css";
 
 :root {
-  --blue: #2563eb;
-  --blue-light: #eff6ff;
-  --text: #1f2937;
-  --text-muted: #6b7280;
-  --border: #e5e7eb;
-  --bg: #ffffff;
-  --bg-gray: #f9fafb;
+  --blue: #60a5fa;
+  --blue-light: rgba(59, 130, 246, 0.12);
+  --text: #e8ebf2;
+  --text-muted: #98a0b3;
+  --border: #1d2230;
+  --bg: #0a0b10;
+  --bg-gray: #10131c;
 }
 
 * {
@@ -48,7 +48,8 @@ a {
 
 .logo {
   font-size: 1.15rem;
-  font-weight: 700;
+  font-weight: 800;
+  letter-spacing: -0.02em;
   color: var(--text);
 }
 
@@ -345,7 +346,9 @@ a {
   --nx-muted: #8b93a7;
   --nx-accent: #3b82f6;
   --nx-accent2: #8b5cf6;
-  background: var(--nx-bg);
+  background:
+    radial-gradient(rgba(139, 147, 167, 0.055) 1px, transparent 1px) 0 0 / 34px 34px,
+    var(--nx-bg);
   color: var(--nx-text);
   min-height: 100vh;
 }
@@ -415,18 +418,28 @@ a {
   pointer-events: none;
 }
 
-.nx-hero h1 {
-  font-size: clamp(2.1rem, 5.2vw, 3.6rem);
-  font-weight: 800;
-  letter-spacing: -0.03em;
-  line-height: 1.25;
+.nx-hello {
+  color: var(--nx-accent);
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
   z-index: 1;
 }
 
-.nx-hero > p {
-  margin-top: 14px;
+.nx-hero h1 {
+  font-size: clamp(3rem, 8vw, 5.4rem);
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  line-height: 1.1;
+  margin-top: 6px;
+  z-index: 1;
+}
+
+.nx-tagline {
+  margin-top: 16px;
   color: var(--nx-muted);
-  font-size: clamp(0.95rem, 1.6vw, 1.1rem);
+  font-size: clamp(0.95rem, 1.6vw, 1.12rem);
+  line-height: 1.8;
   z-index: 1;
 }
 
@@ -592,18 +605,23 @@ a {
   gap: 18px;
 }
 
+.nx-cards-3 {
+  grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+}
+
 .nx-card {
-  background: var(--nx-surface);
+  background: linear-gradient(160deg, rgba(255, 255, 255, 0.035), rgba(255, 255, 255, 0.008));
   border: 1px solid var(--nx-border);
   border-radius: 18px;
-  padding: 26px 22px;
+  padding: 28px 24px;
   height: 100%;
-  transition: border-color 0.25s, transform 0.25s;
+  transition: border-color 0.25s, transform 0.25s, box-shadow 0.25s;
 }
 
 .nx-card:hover {
-  border-color: var(--nx-accent);
+  border-color: rgba(96, 165, 250, 0.55);
   transform: translateY(-4px);
+  box-shadow: 0 14px 40px rgba(59, 130, 246, 0.12);
 }
 
 .nx-card h3 {
@@ -623,11 +641,107 @@ a {
   font-weight: 600;
 }
 
+/* 프로젝트 */
+.nx-projects {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 18px;
+}
+
+.nx-project {
+  background: linear-gradient(160deg, rgba(255, 255, 255, 0.035), rgba(255, 255, 255, 0.008));
+  border: 1px solid var(--nx-border);
+  border-radius: 18px;
+  padding: 28px 24px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  transition: border-color 0.25s, transform 0.25s, box-shadow 0.25s;
+}
+
+.nx-project:hover {
+  border-color: rgba(139, 92, 246, 0.55);
+  transform: translateY(-4px);
+  box-shadow: 0 14px 40px rgba(139, 92, 246, 0.1);
+}
+
+.nx-project-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.nx-project-head h3 {
+  font-size: 1.1rem;
+}
+
+.nx-project-period {
+  color: var(--nx-muted);
+  font-size: 0.78rem;
+  white-space: nowrap;
+}
+
+.nx-project > p {
+  color: var(--nx-muted);
+  font-size: 0.9rem;
+  line-height: 1.7;
+  flex: 1;
+}
+
+.nx-project-foot {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-top: 18px;
+}
+
+.nx-stack {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.nx-stack span {
+  background: rgba(96, 165, 250, 0.1);
+  border: 1px solid rgba(96, 165, 250, 0.22);
+  color: #a8c7fa;
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 3px 9px;
+  border-radius: 999px;
+}
+
+.nx-project-link {
+  color: var(--nx-accent);
+  font-size: 0.82rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.nx-project-private {
+  color: var(--nx-muted);
+  font-weight: 500;
+}
+
 /* 최근 문서 */
 .nx-doc-list {
   display: flex;
   flex-direction: column;
   gap: 12px;
+  margin-top: 28px;
+}
+
+.nx-doc-arrow {
+  color: var(--nx-accent);
+  font-weight: 700;
+  transition: transform 0.25s;
+}
+
+.nx-doc-row:hover .nx-doc-arrow {
+  transform: translateX(4px);
 }
 
 .nx-doc-row {
@@ -659,9 +773,8 @@ a {
 
 .nx-doc-side {
   display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 4px;
+  align-items: center;
+  gap: 14px;
   flex-shrink: 0;
 }
 

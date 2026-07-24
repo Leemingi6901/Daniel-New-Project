@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import Modal from "@/components/Modal";
 
 const RESUME = {
   name: "이민기",
@@ -71,19 +72,6 @@ const RESUME = {
 export default function ProfileCard() {
   const [open, setOpen] = useState(false);
 
-  useEffect(() => {
-    if (!open) return;
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setOpen(false);
-    };
-    document.addEventListener("keydown", onKey);
-    document.body.style.overflow = "hidden";
-    return () => {
-      document.removeEventListener("keydown", onKey);
-      document.body.style.overflow = "";
-    };
-  }, [open]);
-
   return (
     <>
       <div className="nx-avatar-group">
@@ -105,16 +93,7 @@ export default function ProfileCard() {
         </span>
       </div>
 
-      <div
-        className={`nx-modal-backdrop ${open ? "is-open" : ""}`}
-        onClick={() => setOpen(false)}
-        aria-hidden={!open}
-      >
-        <div className="nx-modal" onClick={(e) => e.stopPropagation()}>
-          <button type="button" className="nx-modal-close" onClick={() => setOpen(false)} aria-label="닫기">
-            ✕
-          </button>
-
+      <Modal open={open} onClose={() => setOpen(false)}>
           <div className="nx-modal-head">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img className="nx-modal-photo" src={RESUME.photo} alt={RESUME.name} />
@@ -166,8 +145,7 @@ export default function ProfileCard() {
               <span key={s}>{s}</span>
             ))}
           </div>
-        </div>
-      </div>
+      </Modal>
     </>
   );
 }

@@ -683,6 +683,47 @@ a {
   margin-bottom: 16px;
 }
 
+.nx-modal-eyebrow {
+  display: block;
+  color: var(--nx-accent);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+
+.nx-modal-title {
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: var(--nx-text);
+  margin-bottom: 14px;
+  padding-right: 26px;
+}
+
+.nx-modal-body {
+  color: var(--nx-muted);
+  font-size: 0.92rem;
+  line-height: 1.75;
+}
+
+.nx-modal-project-stack {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 18px 0 22px;
+}
+
+.nx-modal-project-stack span {
+  background: rgba(45, 212, 191, 0.12);
+  border: 1px solid rgba(45, 212, 191, 0.28);
+  color: #99f6e4;
+  font-size: 0.76rem;
+  font-weight: 600;
+  padding: 4px 11px;
+  border-radius: 999px;
+}
+
 .nx-modal h4 {
   color: var(--nx-accent);
   font-size: 0.72rem;
@@ -1000,6 +1041,15 @@ a {
   transition: border-color 0.25s, transform 0.25s, box-shadow 0.25s;
 }
 
+.nx-card-btn {
+  display: block;
+  width: 100%;
+  text-align: left;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+}
+
 .nx-card:hover {
   border-color: rgba(45, 212, 191, 0.55);
   transform: translateY(-4px);
@@ -1023,11 +1073,62 @@ a {
   font-weight: 600;
 }
 
-/* 프로젝트 */
+/* 프로젝트 캐러셀 */
+.nx-carousel {
+  position: relative;
+}
+
 .nx-projects {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  display: flex;
   gap: 18px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  padding-bottom: 2px;
+}
+
+.nx-projects::-webkit-scrollbar {
+  display: none;
+}
+
+.nx-projects > .reveal {
+  flex: 0 0 calc((100% - 36px) / 3);
+  min-width: 260px;
+  scroll-snap-align: start;
+}
+
+.nx-carousel-controls {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.nx-carousel-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1px solid var(--nx-border);
+  background: var(--nx-surface);
+  color: var(--nx-text);
+  font-size: 1.2rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: border-color 0.2s, color 0.2s, transform 0.2s;
+}
+
+.nx-carousel-btn:hover {
+  border-color: var(--nx-accent);
+  color: var(--nx-accent);
+  transform: translateY(-2px);
+}
+
+@media (max-width: 860px) {
+  .nx-projects > .reveal {
+    flex: 0 0 82%;
+  }
 }
 
 .nx-project {

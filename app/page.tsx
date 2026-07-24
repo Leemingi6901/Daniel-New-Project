@@ -2,6 +2,8 @@ import Link from "next/link";
 import { CATEGORIES, listDocs } from "@/lib/wiki";
 import NeuralNetwork from "@/components/NeuralNetwork";
 import ProfileCard from "@/components/ProfileCard";
+import InterestCards from "@/components/InterestCards";
+import ProjectCards from "@/components/ProjectCards";
 import Reveal from "@/components/Reveal";
 
 const PROJECTS = [
@@ -72,15 +74,15 @@ export default function Home() {
 
       {/* 히어로 */}
       <section className="nx-hero">
-        <p className="nx-hello">안녕하세요, 인프라를 지키는 엔지니어</p>
+        <p className="nx-hello">Daniel Tech Wiki</p>
         <div className="nx-hero-title">
           <h1>Daniel</h1>
           <ProfileCard />
         </div>
         <p className="nx-tagline">
-          인프라부터 네트워크 보안, AI까지 — 지켜본 것, 구축한 것, 파고든 것을
+          이 사이트는 인간 이민기의 기술 블로그입니다.
           <br />
-          하나의 지식 그래프로 기록합니다.
+          제가 경험했던 인프라, 네트워크, 보안 업무를 문서화 하였습니다.
         </p>
         <div className="nx-network">
           <NeuralNetwork
@@ -99,19 +101,10 @@ export default function Home() {
         <Reveal>
           <span className="nx-eyebrow">01 — ABOUT</span>
           <h2>
-            요즘 이런 것들에 <em>빠져</em> 있습니다
+            요즘 이런 것들에 <em>집중</em>하고 있습니다
           </h2>
         </Reveal>
-        <div className="nx-cards nx-cards-3">
-          {INTERESTS.map((it, i) => (
-            <Reveal key={it.title} className={`delay-${i}`}>
-              <div className="nx-card">
-                <h3>{it.title}</h3>
-                <p>{it.body}</p>
-              </div>
-            </Reveal>
-          ))}
-        </div>
+        <InterestCards items={INTERESTS} />
       </section>
 
       {/* 02 Projects */}
@@ -119,36 +112,10 @@ export default function Home() {
         <Reveal>
           <span className="nx-eyebrow">02 — PROJECTS</span>
           <h2>
-            직접 만들고 <em>운영</em>하는 것들
+            직접 만들고 <em>운영</em>한 것들
           </h2>
         </Reveal>
-        <div className="nx-projects">
-          {PROJECTS.map((p, i) => (
-            <Reveal key={p.name} className={`delay-${i}`}>
-              <div className="nx-project">
-                <div className="nx-project-head">
-                  <h3>{p.name}</h3>
-                  <span className="nx-project-period">{p.period}</span>
-                </div>
-                <p>{p.description}</p>
-                <div className="nx-project-foot">
-                  <div className="nx-stack">
-                    {p.stack.map((s) => (
-                      <span key={s}>{s}</span>
-                    ))}
-                  </div>
-                  {p.link ? (
-                    <a href={p.link} target="_blank" rel="noreferrer" className="nx-project-link">
-                      {p.linkLabel}
-                    </a>
-                  ) : (
-                    <span className="nx-project-link nx-project-private">{p.linkLabel}</span>
-                  )}
-                </div>
-              </div>
-            </Reveal>
-          ))}
-        </div>
+        <ProjectCards items={PROJECTS} />
       </section>
 
       {/* 03 Wiki */}
@@ -156,7 +123,7 @@ export default function Home() {
         <Reveal>
           <span className="nx-eyebrow">03 — LEARNING WIKI</span>
           <h2>
-            공부한 것은 전부 <em>기록</em>으로
+            경험/기술 <em>기록</em>
           </h2>
         </Reveal>
         <div className="nx-cards" id="categories">
@@ -194,15 +161,26 @@ export default function Home() {
         <Reveal>
           <span className="nx-eyebrow">04 — CONTACT</span>
           <h2>
-            함께 <em>배우고</em> 싶다면
+            더 자세히 <em>알아보고</em> 싶다면
           </h2>
-          <p>기록은 공유될 때 더 멀리 갑니다. 피드백, 질문, 제안 모두 환영합니다.</p>
+          <p>피드백, 질문, 제안 모두 환영합니다. 가벼운 마음으로 연락 부탁드립니다.</p>
           <div className="nx-cta-links">
             <a href="https://github.com/Leemingi6901" target="_blank" rel="noreferrer" className="nx-btn">
               GitHub ↗
             </a>
             <a href="https://leemingi6901.github.io" target="_blank" rel="noreferrer" className="nx-btn nx-btn-ghost">
               기술 블로그 ↗
+            </a>
+            <a
+              href="https://instagram.com/2mg_2"
+              target="_blank"
+              rel="noreferrer"
+              className="nx-btn nx-btn-ghost"
+            >
+              Instagram ↗
+            </a>
+            <a href="mailto:leemingi69012@gmail.com" className="nx-btn nx-btn-ghost">
+              Email
             </a>
           </div>
         </Reveal>

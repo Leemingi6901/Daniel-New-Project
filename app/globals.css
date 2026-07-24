@@ -834,6 +834,7 @@ a {
   stroke: rgba(139, 147, 167, 0.28);
   stroke-width: 1.2;
   fill: none;
+  transition: stroke 0.25s, stroke-width 0.25s, filter 0.25s;
 }
 
 .nn-edge-thin {
@@ -846,8 +847,29 @@ a {
   animation: nn-dash 1.3s linear infinite;
 }
 
+.nn-edge.is-active {
+  stroke: var(--nx-accent);
+  stroke-width: 2;
+  filter: drop-shadow(0 0 4px var(--nx-accent));
+}
+
 @keyframes nn-dash {
   to { stroke-dashoffset: -18; }
+}
+
+.nn-ripple {
+  fill: none;
+  stroke: var(--nx-accent);
+  stroke-width: 2;
+  pointer-events: none;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: nn-ripple-burst 0.7s ease-out forwards;
+}
+
+@keyframes nn-ripple-burst {
+  0% { transform: scale(0.4); opacity: 0.85; }
+  100% { transform: scale(6); opacity: 0; }
 }
 
 .nn-pulse {
@@ -885,6 +907,11 @@ a {
 .nn-node:hover {
   opacity: 0.85;
   filter: drop-shadow(0 0 8px var(--nx-accent));
+}
+
+.nn-node:active {
+  opacity: 0.65;
+  filter: drop-shadow(0 0 12px var(--nx-accent));
 }
 
 .nn-hub {

@@ -344,8 +344,9 @@ a {
   --nx-border: #1d2230;
   --nx-text: #eef1f6;
   --nx-muted: #8b93a7;
-  --nx-accent: #3b82f6;
-  --nx-accent2: #8b5cf6;
+  --nx-accent: #2dd4bf;
+  --nx-accent2: #f472b6;
+  --nx-accent3: #a78bfa;
   background:
     radial-gradient(rgba(139, 147, 167, 0.055) 1px, transparent 1px) 0 0 / 34px 34px,
     var(--nx-bg);
@@ -355,7 +356,7 @@ a {
 
 .nx em {
   font-style: normal;
-  background: linear-gradient(90deg, var(--nx-accent), var(--nx-accent2));
+  background: linear-gradient(90deg, var(--nx-accent), var(--nx-accent3), var(--nx-accent2));
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
@@ -413,9 +414,16 @@ a {
   position: absolute;
   inset: -20%;
   background:
-    radial-gradient(600px 400px at 30% 20%, rgba(59, 130, 246, 0.12), transparent 70%),
-    radial-gradient(600px 400px at 75% 75%, rgba(139, 92, 246, 0.1), transparent 70%);
+    radial-gradient(600px 400px at 25% 20%, rgba(45, 212, 191, 0.14), transparent 70%),
+    radial-gradient(560px 420px at 78% 30%, rgba(167, 139, 250, 0.1), transparent 70%),
+    radial-gradient(600px 400px at 60% 80%, rgba(244, 114, 182, 0.11), transparent 70%);
   pointer-events: none;
+  animation: nx-aurora 14s ease-in-out infinite;
+}
+
+@keyframes nx-aurora {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.75; transform: scale(1.06); }
 }
 
 .nx-hello {
@@ -427,12 +435,38 @@ a {
 }
 
 .nx-hero h1 {
+  position: relative;
   font-size: clamp(3rem, 8vw, 5.4rem);
   font-weight: 800;
   letter-spacing: -0.04em;
   line-height: 1.1;
   margin-top: 6px;
   z-index: 1;
+  display: inline-block;
+  background: linear-gradient(
+    100deg,
+    var(--nx-text),
+    var(--nx-accent),
+    var(--nx-accent3),
+    var(--nx-accent2),
+    var(--nx-text)
+  );
+  background-size: 300% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  animation: nx-title-float 3.2s ease-in-out infinite, nx-title-color 7s linear infinite;
+}
+
+@keyframes nx-title-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+@keyframes nx-title-color {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 300% 50%; }
 }
 
 .nx-tagline {
@@ -447,6 +481,306 @@ a {
   width: min(920px, 96vw);
   margin-top: 8px;
   z-index: 1;
+}
+
+/* 히어로 타이틀 + 아바타 */
+.nx-hero-title {
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 0.3em;
+}
+
+.nx-avatar-btn {
+  position: relative;
+  width: clamp(56px, 7vw, 88px);
+  height: clamp(56px, 7vw, 88px);
+  border-radius: 50%;
+  padding: 0;
+  border: 2.5px solid var(--nx-accent);
+  cursor: pointer;
+  flex-shrink: 0;
+  order: 2;
+  align-self: center;
+  margin-top: 0.1em;
+  margin-left: 0.15em;
+  box-shadow: 0 0 0 5px rgba(45, 212, 191, 0.12);
+  transition: transform 0.25s, box-shadow 0.25s;
+}
+
+.nx-avatar-btn:hover {
+  transform: scale(1.08);
+  box-shadow: 0 0 0 6px rgba(45, 212, 191, 0.18);
+}
+
+.nx-avatar-btn::before,
+.nx-avatar-btn::after {
+  content: "";
+  position: absolute;
+  inset: -2.5px;
+  border-radius: 50%;
+  border: 1.5px solid var(--nx-accent);
+  opacity: 0.65;
+  pointer-events: none;
+  animation: nx-avatar-ping 2.6s ease-out infinite;
+}
+
+.nx-avatar-btn::after {
+  animation-delay: 1.3s;
+}
+
+@keyframes nx-avatar-ping {
+  0% { transform: scale(1); opacity: 0.6; }
+  100% { transform: scale(1.7); opacity: 0; }
+}
+
+.nx-avatar-photo-wrap {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  overflow: hidden;
+}
+
+.nx-avatar-btn img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.nx-avatar-group {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  animation: nn-float 3.4s ease-in-out infinite;
+}
+
+.nx-avatar-hint {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+  font-size: 0.72rem;
+  line-height: 1.35;
+  color: var(--nx-muted);
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.nx-avatar-hint em {
+  font-style: normal;
+  font-weight: 700;
+  color: var(--nx-accent);
+  letter-spacing: 0.02em;
+  animation: nx-hint-nudge 1.6s ease-in-out infinite;
+}
+
+@keyframes nx-hint-nudge {
+  0%, 100% { transform: translateX(0); }
+  50% { transform: translateX(4px); }
+}
+
+@media (max-width: 640px) {
+  .nx-avatar-hint {
+    display: none;
+  }
+}
+
+/* 프로필 팝업 */
+.nx-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: rgba(3, 4, 7, 0.88);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+}
+
+.nx-modal-backdrop.is-open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.nx-modal {
+  position: relative;
+  width: min(680px, 92vw);
+  max-height: 82vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+  background: #10121a;
+  border: 1px solid var(--nx-border);
+  border-radius: 22px;
+  padding: 32px 36px;
+  text-align: left;
+  transform: scale(0.96);
+  opacity: 0;
+  transition: transform 0.2s ease-out, opacity 0.2s ease-out;
+}
+
+.nx-modal-backdrop.is-open .nx-modal {
+  transform: scale(1);
+  opacity: 1;
+}
+
+.nx-modal-close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: 1px solid var(--nx-border);
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--nx-muted);
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition: color 0.2s, border-color 0.2s;
+}
+
+.nx-modal-close:hover {
+  color: var(--nx-text);
+  border-color: var(--nx-accent);
+}
+
+.nx-modal-head {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 16px;
+  padding-right: 26px;
+}
+
+.nx-modal-photo {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1.5px solid var(--nx-accent);
+  flex-shrink: 0;
+}
+
+.nx-modal-head strong {
+  display: block;
+  font-size: 1.1rem;
+  color: var(--nx-text);
+}
+
+.nx-modal-head em {
+  font-style: normal;
+  font-size: 0.8rem;
+  color: var(--nx-muted);
+}
+
+.nx-profile-summary {
+  color: var(--nx-muted);
+  font-size: 0.86rem;
+  line-height: 1.6;
+  margin-bottom: 16px;
+}
+
+.nx-modal h4 {
+  color: var(--nx-accent);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  margin: 18px 0 10px;
+}
+
+.nx-modal h4:first-of-type {
+  margin-top: 0;
+}
+
+.nx-profile-timeline {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.nx-profile-timeline li {
+  border-left: 2px solid var(--nx-border);
+  padding-left: 12px;
+}
+
+.nx-profile-timeline-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  align-items: baseline;
+}
+
+.nx-profile-timeline-head strong {
+  font-size: 0.85rem;
+  color: var(--nx-text);
+  flex: 1;
+  min-width: 0;
+}
+
+.nx-profile-timeline-head span {
+  font-size: 0.7rem;
+  color: var(--nx-muted);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.nx-profile-timeline-role {
+  color: var(--nx-accent2);
+  font-size: 0.75rem;
+  font-weight: 600;
+  margin: 3px 0 4px;
+}
+
+.nx-profile-timeline p:not(.nx-profile-timeline-role) {
+  color: var(--nx-muted);
+  font-size: 0.8rem;
+  line-height: 1.55;
+}
+
+.nx-profile-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.nx-profile-chips span {
+  background: rgba(45, 212, 191, 0.1);
+  border: 1px solid rgba(45, 212, 191, 0.26);
+  color: #99f6e4;
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 3px 9px;
+  border-radius: 999px;
+}
+
+.nx-profile-chips-skill span {
+  background: rgba(244, 114, 182, 0.1);
+  border-color: rgba(244, 114, 182, 0.26);
+  color: #fbcfe8;
+}
+
+@media (max-width: 640px) {
+  .nx-modal {
+    padding: 22px 18px;
+    border-radius: 18px;
+  }
+}
+
+@media (max-width: 480px) {
+  .nx-profile-timeline-head {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2px;
+  }
+
+  .nx-modal-head {
+    padding-right: 0;
+  }
 }
 
 .nn {
@@ -466,24 +800,72 @@ a {
   stroke-width: 1;
 }
 
+.nn-edge-flow {
+  stroke-dasharray: 3 6;
+  animation: nn-dash 1.3s linear infinite;
+}
+
+@keyframes nn-dash {
+  to { stroke-dashoffset: -18; }
+}
+
 .nn-pulse {
   fill: var(--nx-accent);
   opacity: 0.9;
+  filter: drop-shadow(0 0 3px var(--nx-accent));
+}
+
+.nn-pulse-alt {
+  fill: var(--nx-accent2);
+  opacity: 0.75;
+  filter: drop-shadow(0 0 3px var(--nx-accent2));
+}
+
+.nn-radar {
+  fill: none;
+  stroke-width: 1.4;
+  pointer-events: none;
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: nn-radar-ping 4.2s ease-out infinite;
+}
+
+@keyframes nn-radar-ping {
+  0% { transform: scale(1); opacity: 0.55; }
+  100% { transform: scale(3.3); opacity: 0; }
 }
 
 .nn-node {
   cursor: pointer;
-  animation: nn-float 6s ease-in-out infinite;
-  transition: opacity 0.2s;
+  transition: opacity 0.2s, filter 0.2s;
 }
 
 .nn-node:hover {
-  opacity: 0.82;
+  opacity: 0.85;
+  filter: drop-shadow(0 0 8px var(--nx-accent));
+}
+
+.nn-hub {
+  animation: nn-float 9s ease-in-out infinite;
+}
+
+.nn-cat {
+  animation: nn-float 6s ease-in-out infinite;
+}
+
+.nn-doc {
+  animation: nn-float-wide 4.2s ease-in-out infinite;
 }
 
 @keyframes nn-float {
   0%, 100% { transform: translateY(0); }
   50% { transform: translateY(-7px); }
+}
+
+@keyframes nn-float-wide {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-11px); }
 }
 
 .nn-hub circle:nth-of-type(2) {
@@ -619,9 +1001,9 @@ a {
 }
 
 .nx-card:hover {
-  border-color: rgba(96, 165, 250, 0.55);
+  border-color: rgba(45, 212, 191, 0.55);
   transform: translateY(-4px);
-  box-shadow: 0 14px 40px rgba(59, 130, 246, 0.12);
+  box-shadow: 0 14px 40px rgba(45, 212, 191, 0.14);
 }
 
 .nx-card h3 {
@@ -660,9 +1042,9 @@ a {
 }
 
 .nx-project:hover {
-  border-color: rgba(139, 92, 246, 0.55);
+  border-color: rgba(244, 114, 182, 0.5);
   transform: translateY(-4px);
-  box-shadow: 0 14px 40px rgba(139, 92, 246, 0.1);
+  box-shadow: 0 14px 40px rgba(244, 114, 182, 0.12);
 }
 
 .nx-project-head {
@@ -705,9 +1087,9 @@ a {
 }
 
 .nx-stack span {
-  background: rgba(96, 165, 250, 0.1);
-  border: 1px solid rgba(96, 165, 250, 0.22);
-  color: #a8c7fa;
+  background: rgba(45, 212, 191, 0.12);
+  border: 1px solid rgba(45, 212, 191, 0.28);
+  color: #99f6e4;
   font-size: 0.72rem;
   font-weight: 600;
   padding: 3px 9px;
@@ -807,7 +1189,7 @@ a {
 }
 
 .nx-btn {
-  background: linear-gradient(90deg, var(--nx-accent), var(--nx-accent2));
+  background: linear-gradient(90deg, var(--nx-accent), var(--nx-accent3), var(--nx-accent2));
   color: #fff;
   padding: 12px 26px;
   border-radius: 999px;

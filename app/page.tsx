@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { CATEGORIES, listDocs } from "@/lib/wiki";
 import NeuralNetwork from "@/components/NeuralNetwork";
+import ProfileCard from "@/components/ProfileCard";
 import Reveal from "@/components/Reveal";
 
 const PROJECTS = [
@@ -39,9 +40,9 @@ const PROJECTS = [
 ];
 
 const INTERESTS = [
-  { title: "AI · LLM", body: "로컬 LLM 운영, RAG, AI 에이전트. 직접 굴려보며 한계와 가능성을 몸으로 배우는 중." },
   { title: "인프라 · 자동화", body: "리눅스, 홈서버, launchd/cron 자동화. '한 번 만들면 알아서 돌아가는 것'을 좋아합니다." },
-  { title: "웹 개발", body: "Next.js 중심의 풀스택. 아이디어를 빠르게 서비스로 만드는 도구로 씁니다." },
+  { title: "네트워크 보안", body: "트래픽 분석, 취약점 진단, 위협 대응. 시스템을 지키는 관점에서 기술을 들여다봅니다." },
+  { title: "AI · LLM", body: "로컬 LLM 운영, RAG, AI 에이전트. 직접 굴려보며 한계와 가능성을 몸으로 배우는 중." },
 ];
 
 export default function Home() {
@@ -71,12 +72,13 @@ export default function Home() {
 
       {/* 히어로 */}
       <section className="nx-hero">
-        <p className="nx-hello">안녕하세요, 만들며 배우는 개발자</p>
-        <h1>
-          Daniel<em>.</em>
-        </h1>
+        <p className="nx-hello">안녕하세요, 인프라를 지키는 엔지니어</p>
+        <div className="nx-hero-title">
+          <h1>Daniel</h1>
+          <ProfileCard />
+        </div>
         <p className="nx-tagline">
-          인프라부터 AI까지 — 공부한 것, 만든 것, 관심 있는 것을
+          인프라부터 네트워크 보안, AI까지 — 지켜본 것, 구축한 것, 파고든 것을
           <br />
           하나의 지식 그래프로 기록합니다.
         </p>

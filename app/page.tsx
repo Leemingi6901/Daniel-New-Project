@@ -96,6 +96,22 @@ export default function Home() {
         </div>
       </section>
 
+      {/* PaceLab 배너 */}
+      <section className="nx-banner-wrap">
+        <Reveal>
+          <a href="https://pacelab-korea97.vercel.app" target="_blank" rel="noreferrer" className="nx-banner">
+            <div className="nx-banner-left">
+              <span className="nx-banner-tag">NEW PROJECT</span>
+              <strong>
+                🏃 Pace<em>Lab</em> — 마라톤 훈련 AI 분석
+              </strong>
+              <p>공식 대회 기록 × 인바디 데이터로 예상 PB와 대회 구간 기록을 예측합니다.</p>
+            </div>
+            <span className="nx-banner-cta">사이트 열기 →</span>
+          </a>
+        </Reveal>
+      </section>
+
       {/* 01 About */}
       <section className="nx-section" id="about">
         <Reveal>

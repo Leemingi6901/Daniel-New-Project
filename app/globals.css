@@ -1363,3 +1363,70 @@ a {
     gap: 10px;
   }
 }
+
+/* PaceLab 배너 */
+.nx-banner-wrap {
+  max-width: 1040px;
+  margin: 0 auto;
+  padding: 8px 24px 0;
+}
+
+.nx-banner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  border: 1px solid transparent;
+  border-radius: 20px;
+  padding: 26px 30px;
+  background:
+    linear-gradient(160deg, rgba(14, 16, 23, 0.96), rgba(14, 16, 23, 0.9)) padding-box,
+    linear-gradient(90deg, var(--nx-accent), var(--nx-accent3), var(--nx-accent2)) border-box;
+  color: var(--nx-text);
+  transition: transform 0.25s, box-shadow 0.25s;
+}
+
+.nx-banner:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 16px 44px rgba(45, 212, 191, 0.14);
+}
+
+.nx-banner-tag {
+  display: inline-block;
+  background: rgba(45, 212, 191, 0.12);
+  border: 1px solid rgba(45, 212, 191, 0.3);
+  color: var(--nx-accent);
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.18em;
+  padding: 3px 10px;
+  border-radius: 999px;
+  margin-bottom: 10px;
+}
+
+.nx-banner-left strong {
+  display: block;
+  font-size: 1.25rem;
+  letter-spacing: -0.02em;
+}
+
+.nx-banner-left p {
+  color: var(--nx-muted);
+  font-size: 0.88rem;
+  margin-top: 6px;
+}
+
+.nx-banner-cta {
+  color: var(--nx-accent);
+  font-weight: 800;
+  font-size: 0.95rem;
+  white-space: nowrap;
+}
+
+@media (max-width: 768px) {
+  .nx-banner {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 22px;
+  }
+}

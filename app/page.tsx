@@ -96,12 +96,28 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Daniel IT Infra & Security 배너 */}
+      <section className="nx-banner-wrap">
+        <Reveal>
+          <a href="https://daniel-infra-security.vercel.app" target="_blank" rel="noreferrer" className="nx-banner">
+            <div className="nx-banner-left">
+              <span className="nx-banner-tag">NEW PROJECT</span>
+              <strong>
+                🛡️ Daniel IT <em>Infra & Security</em> — 기술 트렌드 레이더
+              </strong>
+              <p>국내외 인프라·보안 뉴스를 자동 수집해 지금 가장 뜨는 기술 키워드를 추적합니다.</p>
+            </div>
+            <span className="nx-banner-cta">사이트 열기 →</span>
+          </a>
+        </Reveal>
+      </section>
+
       {/* PaceLab 배너 */}
       <section className="nx-banner-wrap">
         <Reveal>
           <a href="https://pacelab-korea97.vercel.app" target="_blank" rel="noreferrer" className="nx-banner">
             <div className="nx-banner-left">
-              <span className="nx-banner-tag">NEW PROJECT</span>
+              <span className="nx-banner-tag">PROJECT</span>
               <strong>
                 🏃 Pace<em>Lab</em> — 마라톤 훈련 AI 분석
               </strong>

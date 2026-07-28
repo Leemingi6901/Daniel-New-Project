@@ -128,6 +128,22 @@ export default function Home() {
         </Reveal>
       </section>
 
+      {/* Daniel 사주팔자 배너 */}
+      <section className="nx-banner-wrap">
+        <Reveal>
+          <a href="https://daniel-saju.vercel.app" target="_blank" rel="noreferrer" className="nx-banner">
+            <div className="nx-banner-left">
+              <span className="nx-banner-tag">PROJECT</span>
+              <strong>
+                🔮 Daniel <em>사주팔자</em> — 데이터로 읽는 명리학
+              </strong>
+              <p>생년월일시를 만세력으로 환산해 사주팔자를 분석하고, 나와 상대방의 궁합까지 점수화합니다.</p>
+            </div>
+            <span className="nx-banner-cta">사이트 열기 →</span>
+          </a>
+        </Reveal>
+      </section>
+
       {/* 01 About */}
       <section className="nx-section" id="about">
         <Reveal>

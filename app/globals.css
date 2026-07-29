@@ -849,17 +849,16 @@ a {
   cursor: pointer;
 }
 
+.nx-node > g {
+  transition: filter 0.3s ease;
+}
+
 .nx-node-glow {
-  opacity: 0.7;
   transition: opacity 0.3s ease;
 }
 
-.nx-node.is-active .nx-node-glow {
-  opacity: 1;
-}
-
 .nx-node-core {
-  transition: filter 0.25s ease;
+  transition: filter 0.25s ease, r 0.3s ease;
 }
 
 .nx-node.is-active .nx-node-core {
@@ -881,15 +880,12 @@ a {
   font-weight: 700;
 }
 
-.nx-node-label.is-dim {
-  opacity: 0.5;
-}
-
 .nx-node-sublabel {
   fill: var(--nx-muted);
   font-family: var(--nx-mono), monospace;
   font-size: 10.5px;
   text-shadow: 0 0 6px rgba(7, 8, 12, 0.9), 0 0 3px rgba(7, 8, 12, 0.9);
+  transition: opacity 0.25s ease;
   pointer-events: none;
 }
 

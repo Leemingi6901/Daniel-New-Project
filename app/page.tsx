@@ -4,6 +4,7 @@ import NeuralNetworkLoader from "@/components/NeuralNetworkLoader";
 import ProfileCard from "@/components/ProfileCard";
 import InterestCards from "@/components/InterestCards";
 import ProjectCards from "@/components/ProjectCards";
+import DocList from "@/components/DocList";
 import Reveal from "@/components/Reveal";
 import { IconShieldCheck, IconRun, IconMoonStars } from "@tabler/icons-react";
 
@@ -188,23 +189,16 @@ export default function Home() {
             );
           })}
         </div>
-        <div className="nx-doc-list">
-          {docs.slice(0, 5).map((d, i) => (
-            <Reveal key={`${d.category}/${d.slug}`} className={`delay-${i}`}>
-              <Link href={`/wiki/${d.category}/${d.slug}`} className="nx-doc-row">
-                <div>
-                  <strong>{d.title}</strong>
-                  <p>{d.description}</p>
-                </div>
-                <div className="nx-doc-side">
-                  <span className="nx-doc-cat">{CATEGORIES[d.category]?.name}</span>
-                  <time>{d.updated}</time>
-                  <span className="nx-doc-arrow">→</span>
-                </div>
-              </Link>
-            </Reveal>
-          ))}
-        </div>
+        <DocList
+          items={docs.slice(0, 10).map((d) => ({
+            category: d.category,
+            categoryName: CATEGORIES[d.category]?.name ?? "",
+            slug: d.slug,
+            title: d.title,
+            description: d.description,
+            updated: d.updated,
+          }))}
+        />
       </section>
 
       {/* 04 Contact */}

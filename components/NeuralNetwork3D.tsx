@@ -67,37 +67,168 @@ function leafPoint(center: THREE.Vector3, index: number, seedBase: number, radiu
     .add(new THREE.Vector3(r * Math.sin(phi) * Math.cos(theta), r * Math.sin(phi) * Math.sin(theta), r * Math.cos(phi)));
 }
 
-// 배경을 채우는 은하 느낌의 별 입자 — 이미지 없이 순수 파티클로 생성해 팔레트와 자연스럽게 어울린다.
-function Starfield({ count = 1600, radius = 26 }: { count?: number; radius?: number }) {
+// 항성 표면의 "끓어오르는 플라즈마" 질감을 만드는 심플렉스 노이즈 (Ashima Arts, MIT License) + fbm.
+const noiseGLSL = `
+vec4 permute(vec4 x){return mod(((x*34.0)+1.0)*x, 289.0);}
+vec4 taylorInvSqrt(vec4 r){return 1.79284291400159 - 0.85373472095314 * r;}
+float snoise(vec3 v){
+  const vec2 C = vec2(1.0/6.0, 1.0/3.0);
+  const vec4 D = vec4(0.0, 0.5, 1.0, 2.0);
+  vec3 i  = floor(v + dot(v, C.yyy));
+  vec3 x0 = v - i + dot(i, C.xxx);
+  vec3 g = step(x0.yzx, x0.xyz);
+  vec3 l = 1.0 - g;
+  vec3 i1 = min(g.xyz, l.zxy);
+  vec3 i2 = max(g.xyz, l.zxy);
+  vec3 x1 = x0 - i1 + C.xxx;
+  vec3 x2 = x0 - i2 + C.yyy;
+  vec3 x3 = x0 - D.yyy;
+  i = mod(i, 289.0);
+  vec4 p = permute(permute(permute(
+      i.z + vec4(0.0, i1.z, i2.z, 1.0))
+    + i.y + vec4(0.0, i1.y, i2.y, 1.0))
+    + i.x + vec4(0.0, i1.x, i2.x, 1.0));
+  float n_ = 1.0/7.0;
+  vec3 ns = n_ * D.wyz - D.xzx;
+  vec4 j = p - 49.0 * floor(p * ns.z * ns.z);
+  vec4 x_ = floor(j * ns.z);
+  vec4 y_ = floor(j - 7.0 * x_);
+  vec4 x = x_ * ns.x + ns.yyyy;
+  vec4 y = y_ * ns.x + ns.yyyy;
+  vec4 h = 1.0 - abs(x) - abs(y);
+  vec4 b0 = vec4(x.xy, y.xy);
+  vec4 b1 = vec4(x.zw, y.zw);
+  vec4 s0 = floor(b0)*2.0 + 1.0;
+  vec4 s1 = floor(b1)*2.0 + 1.0;
+  vec4 sh = -step(h, vec4(0.0));
+  vec4 a0 = b0.xzyw + s0.xzyw*sh.xxyy;
+  vec4 a1 = b1.xzyw + s1.xzyw*sh.zzww;
+  vec3 p0 = vec3(a0.xy, h.x);
+  vec3 p1 = vec3(a0.zw, h.y);
+  vec3 p2 = vec3(a1.xy, h.z);
+  vec3 p3 = vec3(a1.zw, h.w);
+  vec4 norm = taylorInvSqrt(vec4(dot(p0,p0), dot(p1,p1), dot(p2,p2), dot(p3,p3)));
+  p0 *= norm.x; p1 *= norm.y; p2 *= norm.z; p3 *= norm.w;
+  vec4 m = max(0.6 - vec4(dot(x0,x0), dot(x1,x1), dot(x2,x2), dot(x3,x3)), 0.0);
+  m = m * m;
+  return 42.0 * dot(m*m, vec4(dot(p0,x0), dot(p1,x1), dot(p2,x2), dot(p3,x3)));
+}
+float fbm(vec3 p) {
+  float value = 0.0;
+  float amplitude = 0.55;
+  for (int i = 0; i < 4; i++) {
+    value += amplitude * snoise(p);
+    p *= 2.05;
+    amplitude *= 0.5;
+  }
+  return value;
+}
+`;
+
+const starVertexShader = `
+varying vec3 vNormal;
+varying vec3 vPosition;
+void main() {
+  vNormal = normalize(normalMatrix * normal);
+  vPosition = position;
+  gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+}
+`;
+
+const starFragmentShader = `
+uniform float uTime;
+uniform vec3 uColorDark;
+uniform vec3 uColorBright;
+varying vec3 vNormal;
+varying vec3 vPosition;
+${noiseGLSL}
+void main() {
+  vec3 p = normalize(vPosition) * 2.4 + vec3(0.0, 0.0, uTime * 0.08);
+  float n = fbm(p) * 0.5 + 0.5;
+  vec3 color = mix(uColorDark, uColorBright, smoothstep(0.25, 0.85, n));
+  float fresnel = pow(1.0 - max(dot(normalize(vNormal), vec3(0.0, 0.0, 1.0)), 0.0), 2.0);
+  color += uColorBright * fresnel * 1.6;
+  gl_FragColor = vec4(color, 1.0);
+}
+`;
+
+// 노드 구체를 항성 표면처럼 렌더링 — 시간에 따라 끓어오르는 노이즈 + 가장자리 발광(fresnel).
+function StarMaterial({ color }: { color: string }) {
+  const ref = useRef<THREE.ShaderMaterial>(null);
+  const uniforms = useMemo(
+    () => ({
+      uTime: { value: 0 },
+      uColorDark: { value: new THREE.Color(color).multiplyScalar(0.5) },
+      uColorBright: { value: new THREE.Color(color).lerp(new THREE.Color("#ffffff"), 0.7) },
+    }),
+    [color]
+  );
+  useFrame(({ clock }) => {
+    if (ref.current) ref.current.uniforms.uTime.value = clock.elapsedTime;
+  });
+  return (
+    <shaderMaterial
+      ref={ref}
+      uniforms={uniforms}
+      vertexShader={starVertexShader}
+      fragmentShader={starFragmentShader}
+      toneMapped={false}
+    />
+  );
+}
+
+// 노드를 항성처럼 보이게 하는 발광 텍스처 — 캔버스로 방사형 그라디언트를 한 번만 그려서 재사용한다.
+let glowTexture: THREE.Texture | null = null;
+function getGlowTexture() {
+  if (glowTexture) return glowTexture;
+  const size = 128;
+  const canvas = document.createElement("canvas");
+  canvas.width = size;
+  canvas.height = size;
+  const ctx = canvas.getContext("2d")!;
+  const gradient = ctx.createRadialGradient(size / 2, size / 2, 0, size / 2, size / 2, size / 2);
+  gradient.addColorStop(0, "rgba(255,255,255,1)");
+  gradient.addColorStop(0.22, "rgba(255,255,255,0.85)");
+  gradient.addColorStop(0.5, "rgba(255,255,255,0.22)");
+  gradient.addColorStop(1, "rgba(255,255,255,0)");
+  ctx.fillStyle = gradient;
+  ctx.fillRect(0, 0, size, size);
+  glowTexture = new THREE.CanvasTexture(canvas);
+  return glowTexture;
+}
+
+// 나선 은하 형태로 배치한 배경 파티클 — 이미지 없이 코드로 생성해 팔레트와 자연스럽게 어울린다.
+function GalaxyField({ count = 4200, radius = 24, arms = 3, spin = 1.4 }: { count?: number; radius?: number; arms?: number; spin?: number }) {
   const pointsRef = useRef<THREE.Points>(null);
   const [positions, colors] = useMemo(() => {
     const pos = new Float32Array(count * 3);
     const col = new Float32Array(count * 3);
-    const palette = [
-      new THREE.Color(ACCENT),
-      new THREE.Color(ACCENT2),
-      new THREE.Color(ACCENT3),
-      new THREE.Color("#e6ecff"),
-      new THREE.Color("#e6ecff"),
-      new THREE.Color("#e6ecff"),
-    ];
+    const core = new THREE.Color("#fff3d6");
+    const outer = [new THREE.Color(ACCENT), new THREE.Color(ACCENT2), new THREE.Color(ACCENT3), new THREE.Color("#8ea6ff")];
     for (let i = 0; i < count; i++) {
-      const r = radius * (0.3 + Math.cbrt(pseudo(i * 1.37 + 5)) * 0.7);
-      const theta = pseudo(i * 2.19 + 11) * Math.PI * 2;
-      const phi = Math.acos(2 * pseudo(i * 3.71 + 17) - 1);
-      pos[i * 3] = r * Math.sin(phi) * Math.cos(theta);
-      pos[i * 3 + 1] = r * Math.cos(phi) * 0.6;
-      pos[i * 3 + 2] = r * Math.sin(phi) * Math.sin(theta);
-      const c = palette[Math.floor(pseudo(i * 5.13 + 23) * palette.length)];
+      const rand = pseudo(i * 1.618 + 3);
+      const r = Math.pow(rand, 1.7) * radius;
+      const armOffset = ((i % arms) / arms) * Math.PI * 2;
+      const spinAngle = r * spin;
+      const scatterSpread = 0.22 + (r / radius) * 0.5;
+      const scatter = (pseudo(i * 3.14 + 9) - 0.5) * scatterSpread;
+      const theta = armOffset + spinAngle + scatter;
+      const thickness = (pseudo(i * 7.77 + 4) - 0.5) * (0.55 + (1 - r / radius) * 0.35);
+      pos[i * 3] = Math.cos(theta) * r;
+      pos[i * 3 + 1] = thickness;
+      pos[i * 3 + 2] = Math.sin(theta) * r;
+
+      const mixT = Math.min(1, r / radius);
+      const c = core.clone().lerp(outer[i % outer.length], Math.pow(mixT, 0.7));
       col[i * 3] = c.r;
       col[i * 3 + 1] = c.g;
       col[i * 3 + 2] = c.b;
     }
     return [pos, col];
-  }, [count, radius]);
+  }, [count, radius, arms, spin]);
 
   useFrame((_, delta) => {
-    if (pointsRef.current) pointsRef.current.rotation.y += delta * 0.015;
+    if (pointsRef.current) pointsRef.current.rotation.y += delta * 0.012;
   });
 
   return (
@@ -106,8 +237,18 @@ function Starfield({ count = 1600, radius = 26 }: { count?: number; radius?: num
         <bufferAttribute attach="attributes-position" args={[positions, 3]} />
         <bufferAttribute attach="attributes-color" args={[colors, 3]} />
       </bufferGeometry>
-      <pointsMaterial size={0.05} vertexColors transparent opacity={0.8} sizeAttenuation depthWrite={false} toneMapped={false} />
+      <pointsMaterial size={0.045} vertexColors transparent opacity={0.85} sizeAttenuation depthWrite={false} blending={THREE.AdditiveBlending} toneMapped={false} />
     </points>
+  );
+}
+
+// 은하 중심부의 은은한 광채 — 발광 텍스처 스프라이트를 크게 깔아 코어가 밝게 빛나는 느낌을 준다.
+function GalaxyCoreGlow() {
+  const texture = useMemo(() => getGlowTexture(), []);
+  return (
+    <sprite scale={[9, 9, 1]} position={[0, 0, 0]} raycast={() => null}>
+      <spriteMaterial map={texture} color="#fff3d6" transparent opacity={0.35} blending={THREE.AdditiveBlending} depthWrite={false} toneMapped={false} />
+    </sprite>
   );
 }
 
@@ -169,8 +310,15 @@ interface NodeProps {
 }
 
 function Node({ position, radius, color, active, onHover, onLeave, onClick, label, sublabel, labelOffset = 0.28, bold }: NodeProps) {
+  const texture = useMemo(() => getGlowTexture(), []);
+  const glowScale = radius * (active ? 6.5 : 5);
+
   return (
     <group position={position}>
+      {/* 항성 코로나 — 발광 텍스처를 입힌 스프라이트, 클릭/호버 판정에서 제외 */}
+      <sprite scale={[glowScale, glowScale, 1]} raycast={() => null}>
+        <spriteMaterial map={texture} color={color} transparent opacity={active ? 0.95 : 0.7} blending={THREE.AdditiveBlending} depthWrite={false} toneMapped={false} />
+      </sprite>
       <mesh
         onPointerOver={(e) => {
           e.stopPropagation();
@@ -187,15 +335,9 @@ function Node({ position, radius, color, active, onHover, onLeave, onClick, labe
           onClick(e);
         }}
       >
-        <sphereGeometry args={[radius, 20, 20]} />
-        <meshBasicMaterial color={color} toneMapped={false} />
+        <sphereGeometry args={[radius, 32, 32]} />
+        <StarMaterial color={color} />
       </mesh>
-      {active && (
-        <mesh>
-          <sphereGeometry args={[radius * 1.9, 16, 16]} />
-          <meshBasicMaterial color={color} transparent opacity={0.16} toneMapped={false} depthWrite={false} />
-        </mesh>
-      )}
       {label && (
         <Html position={[0, radius + labelOffset, 0]} center style={{ pointerEvents: "none" }} occlude={false}>
           <div className={`nn3d-label ${bold ? "nn3d-label-bold" : ""}`}>
@@ -230,7 +372,8 @@ function Scene({ categories, docs }: Props) {
   return (
     <>
       <ForceResize />
-      <Starfield />
+      <GalaxyField />
+      <GalaxyCoreGlow />
       <ambientLight intensity={0.8} />
       <OrbitControls
         enableZoom

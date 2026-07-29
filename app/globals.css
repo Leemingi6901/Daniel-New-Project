@@ -1160,12 +1160,27 @@ a {
   font-weight: 500;
 }
 
-/* 최근 문서 */
-.nx-doc-list {
+/* 최근 문서 — 옆으로 넘기는 한 줄 캐러셀 */
+.nx-doc-track {
   display: flex;
-  flex-direction: column;
-  gap: 12px;
+  gap: 14px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
   margin-top: 28px;
+  padding-bottom: 2px;
+}
+
+.nx-doc-track::-webkit-scrollbar {
+  display: none;
+}
+
+.nx-doc-track > .reveal {
+  flex: 0 0 min(520px, 86vw);
+  min-width: 0;
+  scroll-snap-align: start;
 }
 
 .nx-doc-arrow {
@@ -1296,21 +1311,6 @@ a {
 
   .nx-section {
     padding: 70px 20px;
-  }
-
-  .nx-doc-row {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .nx-doc-row > div:first-child {
-    width: 100%;
-  }
-
-  .nx-doc-side {
-    flex-direction: row;
-    align-items: center;
-    gap: 10px;
   }
 }
 

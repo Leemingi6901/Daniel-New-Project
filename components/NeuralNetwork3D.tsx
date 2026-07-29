@@ -198,7 +198,7 @@ function getGlowTexture() {
 }
 
 // 나선 은하 형태로 배치한 배경 파티클 — 이미지 없이 코드로 생성해 팔레트와 자연스럽게 어울린다.
-function GalaxyField({ count = 4200, radius = 24, arms = 3, spin = 1.4 }: { count?: number; radius?: number; arms?: number; spin?: number }) {
+function GalaxyField({ count = 2000, radius = 24, arms = 3, spin = 1.4 }: { count?: number; radius?: number; arms?: number; spin?: number }) {
   const pointsRef = useRef<THREE.Points>(null);
   const [positions, colors] = useMemo(() => {
     const pos = new Float32Array(count * 3);
@@ -237,7 +237,7 @@ function GalaxyField({ count = 4200, radius = 24, arms = 3, spin = 1.4 }: { coun
         <bufferAttribute attach="attributes-position" args={[positions, 3]} />
         <bufferAttribute attach="attributes-color" args={[colors, 3]} />
       </bufferGeometry>
-      <pointsMaterial size={0.045} vertexColors transparent opacity={0.85} sizeAttenuation depthWrite={false} blending={THREE.AdditiveBlending} toneMapped={false} />
+      <pointsMaterial size={0.032} vertexColors transparent opacity={0.55} sizeAttenuation depthWrite={false} blending={THREE.AdditiveBlending} toneMapped={false} />
     </points>
   );
 }
@@ -312,6 +312,17 @@ interface NodeProps {
 function Node({ position, radius, color, active, onHover, onLeave, onClick, label, sublabel, labelOffset = 0.28, bold }: NodeProps) {
   const texture = useMemo(() => getGlowTexture(), []);
   const glowScale = radius * (active ? 6.5 : 5);
+  const labelRef = useRef<HTMLDivElement>(null);
+
+  // 카메라 기준 뒤쪽(먼) 노드의 라벨일수록 반투명해져 앞쪽 글자와 겹쳐 보이지 않게 한다.
+  useFrame(({ camera }) => {
+    if (!labelRef.current) return;
+    const dist = camera.position.distanceTo(position);
+    const camDist = camera.position.length();
+    const t = THREE.MathUtils.clamp((dist - camDist + 2.2) / 4.5, 0, 1);
+    const opacity = active ? 1 : THREE.MathUtils.lerp(1, 0.15, t);
+    labelRef.current.style.opacity = String(opacity);
+  });
 
   return (
     <group position={position}>
@@ -340,7 +351,7 @@ function Node({ position, radius, color, active, onHover, onLeave, onClick, labe
       </mesh>
       {label && (
         <Html position={[0, radius + labelOffset, 0]} center style={{ pointerEvents: "none" }} occlude={false}>
-          <div className={`nn3d-label ${bold ? "nn3d-label-bold" : ""}`}>
+          <div ref={labelRef} className={`nn3d-label ${bold ? "nn3d-label-bold" : ""}`}>
             <strong>{label}</strong>
             {sublabel && <span>{sublabel}</span>}
           </div>

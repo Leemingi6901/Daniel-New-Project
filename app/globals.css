@@ -1247,16 +1247,17 @@ a {
 
 .nx-doc-row > div:first-child {
   display: flex;
-  align-items: baseline;
-  gap: 12px;
+  flex-direction: column;
+  gap: 4px;
   min-width: 0;
   flex: 1;
 }
 
 .nx-doc-row strong {
   font-size: 1rem;
-  flex-shrink: 0;
   white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .nx-doc-row p {
@@ -1274,6 +1275,28 @@ a {
   align-items: center;
   gap: 14px;
   flex-shrink: 0;
+}
+
+@media (max-width: 560px) {
+  .nx-doc-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .nx-doc-row > div:first-child {
+    width: 100%;
+  }
+
+  .nx-doc-row strong,
+  .nx-doc-row p {
+    white-space: normal;
+  }
+
+  .nx-doc-side {
+    width: 100%;
+    justify-content: space-between;
+  }
 }
 
 .nx-doc-cat {

@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { CATEGORIES, listDocs } from "@/lib/wiki";
-import NeuralNetworkLoader from "@/components/NeuralNetworkLoader";
+import NeuralNetworkOrganic from "@/components/NeuralNetworkOrganic";
 import ProfileCard from "@/components/ProfileCard";
 import InterestCards from "@/components/InterestCards";
 import ProjectCards from "@/components/ProjectCards";
@@ -87,7 +87,7 @@ export default function Home() {
           제가 경험했던 인프라, 네트워크, 보안 업무를 문서화 하였습니다.
         </p>
         <div className="nx-network">
-          <NeuralNetworkLoader
+          <NeuralNetworkOrganic
             categories={categories.map(({ key, name, count }) => ({ key, name, count }))}
             docs={docs.map(({ category, slug, title }) => ({ category, slug, title }))}
           />

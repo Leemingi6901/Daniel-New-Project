@@ -350,7 +350,7 @@ function Node({ position, radius, color, active, onHover, onLeave, onClick, labe
   );
 }
 
-function Scene({ categories, docs }: Props) {
+function Scene({ categories, docs, engaged }: Props & { engaged: boolean }) {
   const router = useRouter();
   const [active, setActive] = useState<string | null>(null);
   const [ripples, setRipples] = useState<{ id: number; position: THREE.Vector3; color: string }[]>([]);
@@ -376,6 +376,7 @@ function Scene({ categories, docs }: Props) {
       <GalaxyCoreGlow />
       <ambientLight intensity={0.8} />
       <OrbitControls
+        enabled={engaged}
         enableZoom
         enablePan={false}
         autoRotate
@@ -466,11 +467,34 @@ function Scene({ categories, docs }: Props) {
 }
 
 export default function NeuralNetwork3D({ categories, docs }: Props) {
+  const [engaged, setEngaged] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  // 캔버스 바깥을 클릭/탭하면 상호작용을 해제해 스크롤이 다시 자유로워지게 한다.
+  useEffect(() => {
+    if (!engaged) return;
+    const handlePointerDown = (e: PointerEvent) => {
+      if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
+        setEngaged(false);
+      }
+    };
+    document.addEventListener("pointerdown", handlePointerDown);
+    return () => document.removeEventListener("pointerdown", handlePointerDown);
+  }, [engaged]);
+
   return (
-    <div className="nx-network-canvas" role="img" aria-label="카테고리 네트워크 맵 — 드래그로 회전할 수 있습니다">
-      <Canvas camera={{ position: [0, 2.4, 12], fov: 48 }} gl={{ antialias: true, alpha: true }} dpr={[1, 1.75]}>
-        <Scene categories={categories} docs={docs} />
+    <div
+      ref={containerRef}
+      className={`nx-network-canvas${engaged ? " is-engaged" : ""}`}
+      role="img"
+      aria-label="카테고리 네트워크 맵 — 클릭하면 드래그로 회전하고 스크롤로 확대할 수 있습니다"
+      onClick={() => setEngaged(true)}
+      onMouseLeave={() => setEngaged(false)}
+    >
+      <Canvas camera={{ position: [0, 1.9, 9], fov: 50 }} gl={{ antialias: true, alpha: true }} dpr={[1, 1.75]}>
+        <Scene categories={categories} docs={docs} engaged={engaged} />
       </Canvas>
+      {!engaged && <div className="nx-network-hint">클릭해서 회전 · 확대</div>}
     </div>
   );
 }

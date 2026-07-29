@@ -2,8 +2,8 @@
 @import "pretendard/dist/web/static/pretendard-dynamic-subset.css";
 
 :root {
-  --blue: #60a5fa;
-  --blue-light: rgba(59, 130, 246, 0.12);
+  --blue: #22d3ee;
+  --blue-light: rgba(34, 211, 238, 0.12);
   --text: #e8ebf2;
   --text-muted: #98a0b3;
   --border: #1d2230;
@@ -17,10 +17,23 @@
   box-sizing: border-box;
 }
 
+/* 사이트 전체에 깔리는 우주 배경 — 랜딩(.nx)과 위키 읽기 페이지(.site-*)가 같은 톤을 공유한다 */
 body {
   font-family: "Apple SD Gothic Neo", "Pretendard", -apple-system, sans-serif;
   color: var(--text);
-  background: var(--bg);
+  background:
+    radial-gradient(1.5px 1.5px at 8% 15%, rgba(255, 255, 255, 0.55), transparent),
+    radial-gradient(1px 1px at 24% 70%, rgba(255, 255, 255, 0.4), transparent),
+    radial-gradient(1.5px 1.5px at 40% 30%, rgba(255, 255, 255, 0.5), transparent),
+    radial-gradient(1px 1px at 58% 85%, rgba(255, 255, 255, 0.35), transparent),
+    radial-gradient(1.5px 1.5px at 70% 18%, rgba(255, 255, 255, 0.55), transparent),
+    radial-gradient(1px 1px at 84% 60%, rgba(255, 255, 255, 0.4), transparent),
+    radial-gradient(1.5px 1.5px at 94% 35%, rgba(255, 255, 255, 0.5), transparent),
+    radial-gradient(1px 1px at 14% 92%, rgba(255, 255, 255, 0.35), transparent),
+    radial-gradient(700px 520px at 15% 8%, rgba(34, 211, 238, 0.05), transparent 70%),
+    radial-gradient(650px 500px at 88% 22%, rgba(163, 230, 53, 0.04), transparent 70%),
+    radial-gradient(700px 540px at 50% 96%, rgba(251, 113, 133, 0.045), transparent 70%),
+    var(--bg);
   line-height: 1.7;
 }
 
@@ -349,6 +362,18 @@ a {
   --nx-accent2: #fb7185;
   --nx-accent3: #a3e635;
   background:
+    radial-gradient(1.5px 1.5px at 6% 10%, rgba(255, 255, 255, 0.55), transparent),
+    radial-gradient(1px 1px at 18% 62%, rgba(255, 255, 255, 0.38), transparent),
+    radial-gradient(1.5px 1.5px at 32% 22%, rgba(255, 255, 255, 0.5), transparent),
+    radial-gradient(1px 1px at 48% 78%, rgba(255, 255, 255, 0.32), transparent),
+    radial-gradient(1.5px 1.5px at 62% 12%, rgba(255, 255, 255, 0.55), transparent),
+    radial-gradient(1px 1px at 76% 50%, rgba(255, 255, 255, 0.38), transparent),
+    radial-gradient(1.5px 1.5px at 90% 28%, rgba(255, 255, 255, 0.5), transparent),
+    radial-gradient(1px 1px at 10% 88%, rgba(255, 255, 255, 0.32), transparent),
+    radial-gradient(1.5px 1.5px at 97% 68%, rgba(255, 255, 255, 0.45), transparent),
+    radial-gradient(650px 500px at 12% 8%, rgba(34, 211, 238, 0.055), transparent 70%),
+    radial-gradient(600px 480px at 88% 18%, rgba(163, 230, 53, 0.045), transparent 70%),
+    radial-gradient(650px 520px at 50% 95%, rgba(251, 113, 133, 0.05), transparent 70%),
     radial-gradient(rgba(139, 147, 167, 0.055) 1px, transparent 1px) 0 0 / 34px 34px,
     var(--nx-bg);
   color: var(--nx-text);
@@ -462,8 +487,8 @@ a {
 }
 
 .nx-network {
-  width: min(920px, 96vw);
-  height: clamp(420px, 52vw, 640px);
+  width: 100%;
+  height: clamp(440px, 46vw, 720px);
   margin-top: 8px;
   z-index: 1;
 }
@@ -810,12 +835,40 @@ a {
 .nx-network-canvas {
   width: 100%;
   height: 100%;
+  position: relative;
+  cursor: zoom-in;
+}
+
+.nx-network-canvas.is-engaged {
   cursor: grab;
+}
+
+.nx-network-canvas.is-engaged:active {
+  cursor: grabbing;
 }
 
 .nx-network-canvas canvas {
   width: 100% !important;
   height: 100% !important;
+}
+
+.nx-network-hint {
+  position: absolute;
+  bottom: 14px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 6px 16px;
+  border-radius: 999px;
+  background: rgba(7, 8, 12, 0.55);
+  border: 1px solid var(--nx-border);
+  backdrop-filter: blur(6px);
+  color: var(--nx-muted);
+  font-family: var(--nx-mono), monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  pointer-events: none;
+  z-index: 2;
+  animation: nx-title-in 0.5s ease-out both;
 }
 
 .nn3d-label {
@@ -840,10 +893,6 @@ a {
   color: var(--nx-muted);
   font-size: 0.66rem;
   margin-top: 2px;
-}
-
-.nx-network-canvas:active {
-  cursor: grabbing;
 }
 
 .nx-network-loading {
@@ -945,18 +994,19 @@ a {
 /* 카테고리 카드 — bento: 문서가 가장 많은 카테고리가 2칸 차지 */
 .nx-cards {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
-  grid-auto-flow: dense;
+  grid-template-columns: repeat(4, 1fr);
   gap: 18px;
 }
 
-.nx-card-feature {
-  grid-column: span 2;
+@media (max-width: 860px) {
+  .nx-cards {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
 
-@media (max-width: 640px) {
-  .nx-card-feature {
-    grid-column: span 1;
+@media (max-width: 480px) {
+  .nx-cards {
+    grid-template-columns: 1fr;
   }
 }
 
@@ -1160,27 +1210,12 @@ a {
   font-weight: 500;
 }
 
-/* 최근 문서 — 옆으로 넘기는 한 줄 캐러셀 */
-.nx-doc-track {
+/* 최근 문서 — 세로로 쌓이는 리스트 */
+.nx-doc-list {
   display: flex;
-  gap: 14px;
-  overflow-x: auto;
-  scroll-snap-type: x mandatory;
-  scroll-behavior: smooth;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
+  flex-direction: column;
+  gap: 12px;
   margin-top: 28px;
-  padding-bottom: 2px;
-}
-
-.nx-doc-track::-webkit-scrollbar {
-  display: none;
-}
-
-.nx-doc-track > .reveal {
-  flex: 0 0 min(520px, 86vw);
-  min-width: 0;
-  scroll-snap-align: start;
 }
 
 .nx-doc-arrow {

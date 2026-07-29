@@ -57,7 +57,6 @@ export default function Home() {
     description: cat.description,
     count: docs.filter((d) => d.category === key).length,
   }));
-  const maxCategoryCount = Math.max(0, ...categories.map((c) => c.count));
 
   return (
     <div className="nx">
@@ -176,18 +175,15 @@ export default function Home() {
           </h2>
         </Reveal>
         <div className="nx-cards" id="categories">
-          {categories.map((c, i) => {
-            const isFeatured = c.count > 0 && c.count === maxCategoryCount;
-            return (
-              <Reveal key={c.key} className={`delay-${i} ${isFeatured ? "nx-card-feature" : ""}`}>
-                <div className="nx-card">
-                  <h3>{c.name}</h3>
-                  <p>{c.description}</p>
-                  <span className="nx-card-count">문서 {c.count}개</span>
-                </div>
-              </Reveal>
-            );
-          })}
+          {categories.map((c, i) => (
+            <Reveal key={c.key} className={`delay-${i}`}>
+              <div className="nx-card">
+                <h3>{c.name}</h3>
+                <p>{c.description}</p>
+                <span className="nx-card-count">문서 {c.count}개</span>
+              </div>
+            </Reveal>
+          ))}
         </div>
         <DocList
           items={docs.slice(0, 10).map((d) => ({

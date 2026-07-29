@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { CATEGORIES, listDocs } from "@/lib/wiki";
-import NeuralNetwork from "@/components/NeuralNetwork";
+import NeuralNetworkLoader from "@/components/NeuralNetworkLoader";
 import ProfileCard from "@/components/ProfileCard";
 import InterestCards from "@/components/InterestCards";
 import ProjectCards from "@/components/ProjectCards";
@@ -56,6 +56,7 @@ export default function Home() {
     description: cat.description,
     count: docs.filter((d) => d.category === key).length,
   }));
+  const maxCategoryCount = Math.max(0, ...categories.map((c) => c.count));
 
   return (
     <div className="nx">
@@ -86,7 +87,7 @@ export default function Home() {
           제가 경험했던 인프라, 네트워크, 보안 업무를 문서화 하였습니다.
         </p>
         <div className="nx-network">
-          <NeuralNetwork
+          <NeuralNetworkLoader
             categories={categories.map(({ key, name, count }) => ({ key, name, count }))}
             docs={docs.map(({ category, slug, title }) => ({ category, slug, title }))}
           />
@@ -97,65 +98,60 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Daniel IT Infra & Security 배너 */}
+      {/* 외부 프로젝트 배너 */}
       <section className="nx-banner-wrap">
         <Reveal>
-          <a href="https://daniel-infra-security.vercel.app" target="_blank" rel="noreferrer" className="nx-banner">
-            <div className="nx-banner-left">
-              <span className="nx-banner-tag">NEW PROJECT</span>
-              <strong>
-                <IconShieldCheck className="nx-banner-icon" size={22} stroke={1.8} />
-                Daniel IT <em>Infra & Security</em> — 기술 트렌드 레이더
-              </strong>
-              <p>국내외 인프라·보안 뉴스를 자동 수집해 지금 가장 뜨는 기술 키워드를 추적합니다.</p>
-            </div>
-            <span className="nx-banner-cta">사이트 열기 →</span>
-          </a>
-        </Reveal>
-      </section>
-
-      {/* PaceLab 배너 */}
-      <section className="nx-banner-wrap">
-        <Reveal>
-          <a href="https://pacelab-korea97.vercel.app" target="_blank" rel="noreferrer" className="nx-banner">
-            <div className="nx-banner-left">
+          <div className="nx-banner-group">
+            <a href="https://daniel-infra-security.vercel.app" target="_blank" rel="noreferrer" className="nx-banner-row">
+              <span className="nx-banner-tag">NEW</span>
+              <IconShieldCheck className="nx-banner-icon" size={20} stroke={1.8} />
+              <div className="nx-banner-row-text">
+                <strong>
+                  Daniel IT <em>Infra & Security</em>
+                </strong>
+                <p>국내외 인프라·보안 뉴스를 자동 수집해 지금 가장 뜨는 기술 키워드를 추적합니다.</p>
+              </div>
+              <span className="nx-banner-cta">→</span>
+            </a>
+            <a href="https://pacelab-korea97.vercel.app" target="_blank" rel="noreferrer" className="nx-banner-row">
               <span className="nx-banner-tag">PROJECT</span>
-              <strong>
-                <IconRun className="nx-banner-icon" size={22} stroke={1.8} />
-                Pace<em>Lab</em> — 마라톤 훈련 AI 분석
-              </strong>
-              <p>공식 대회 기록 × 인바디 데이터로 예상 PB와 대회 구간 기록을 예측합니다.</p>
-            </div>
-            <span className="nx-banner-cta">사이트 열기 →</span>
-          </a>
-        </Reveal>
-      </section>
-
-      {/* Daniel 사주팔자 배너 */}
-      <section className="nx-banner-wrap">
-        <Reveal>
-          <a href="https://daniel-saju.vercel.app" target="_blank" rel="noreferrer" className="nx-banner">
-            <div className="nx-banner-left">
+              <IconRun className="nx-banner-icon" size={20} stroke={1.8} />
+              <div className="nx-banner-row-text">
+                <strong>
+                  Pace<em>Lab</em>
+                </strong>
+                <p>공식 대회 기록 × 인바디 데이터로 예상 PB와 대회 구간 기록을 예측합니다.</p>
+              </div>
+              <span className="nx-banner-cta">→</span>
+            </a>
+            <a href="https://daniel-saju.vercel.app" target="_blank" rel="noreferrer" className="nx-banner-row">
               <span className="nx-banner-tag">PROJECT</span>
-              <strong>
-                <IconMoonStars className="nx-banner-icon" size={22} stroke={1.8} />
-                Daniel <em>사주팔자</em> — 데이터로 읽는 명리학
-              </strong>
-              <p>생년월일시를 만세력으로 환산해 사주팔자를 분석하고, 나와 상대방의 궁합까지 점수화합니다.</p>
-            </div>
-            <span className="nx-banner-cta">사이트 열기 →</span>
-          </a>
+              <IconMoonStars className="nx-banner-icon" size={20} stroke={1.8} />
+              <div className="nx-banner-row-text">
+                <strong>
+                  Daniel <em>사주팔자</em>
+                </strong>
+                <p>생년월일시를 만세력으로 환산해 사주팔자를 분석하고, 나와 상대방의 궁합까지 점수화합니다.</p>
+              </div>
+              <span className="nx-banner-cta">→</span>
+            </a>
+          </div>
         </Reveal>
       </section>
 
       {/* 01 About */}
-      <section className="nx-section" id="about">
-        <Reveal>
-          <span className="nx-eyebrow">01 — ABOUT</span>
-          <h2>
-            요즘 이런 것들에 <em>집중</em>하고 있습니다
-          </h2>
-        </Reveal>
+      <section className="nx-section nx-about" id="about">
+        <div className="nx-about-head">
+          <Reveal>
+            <span className="nx-eyebrow">01 — ABOUT</span>
+            <h2>
+              요즘 이런 것들에 <em>집중</em>하고 있습니다
+            </h2>
+            <p className="nx-about-intro">
+              인프라 자동화, 네트워크 보안, AI·LLM 세 갈래를 오가며 직접 굴려보고 기록합니다.
+            </p>
+          </Reveal>
+        </div>
         <InterestCards items={INTERESTS} />
       </section>
 
@@ -179,15 +175,18 @@ export default function Home() {
           </h2>
         </Reveal>
         <div className="nx-cards" id="categories">
-          {categories.map((c, i) => (
-            <Reveal key={c.key} className={`delay-${i}`}>
-              <div className="nx-card">
-                <h3>{c.name}</h3>
-                <p>{c.description}</p>
-                <span className="nx-card-count">문서 {c.count}개</span>
-              </div>
-            </Reveal>
-          ))}
+          {categories.map((c, i) => {
+            const isFeatured = c.count > 0 && c.count === maxCategoryCount;
+            return (
+              <Reveal key={c.key} className={`delay-${i} ${isFeatured ? "nx-card-feature" : ""}`}>
+                <div className="nx-card">
+                  <h3>{c.name}</h3>
+                  <p>{c.description}</p>
+                  <span className="nx-card-count">문서 {c.count}개</span>
+                </div>
+              </Reveal>
+            );
+          })}
         </div>
         <div className="nx-doc-list">
           {docs.slice(0, 5).map((d, i) => (

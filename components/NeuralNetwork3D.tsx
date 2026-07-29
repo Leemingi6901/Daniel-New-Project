@@ -1,9 +1,9 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState, type PointerEvent as ReactPointerEvent } from "react";
 import { useRouter } from "next/navigation";
 import { Canvas, useFrame, useThree, type ThreeEvent } from "@react-three/fiber";
-import { OrbitControls, Html, Line } from "@react-three/drei";
+import { Html, Line } from "@react-three/drei";
 import * as THREE from "three";
 
 // r3f의 자동 리사이즈(useMeasure/ResizeObserver)가 이 레이아웃(clamp 높이 컨테이너)에서
@@ -361,7 +361,26 @@ function Node({ position, radius, color, active, onHover, onLeave, onClick, labe
   );
 }
 
-function Scene({ categories, docs, engaged }: Props & { engaged: boolean }) {
+type PointerVec = { x: number; y: number };
+
+// 드래그 없이 마우스 위치만으로 카메라를 살짝 기울이는 2.5D 패럴랙스 — 항상 기본 각도로 부드럽게 되돌아온다.
+function ParallaxRig({ pointer }: { pointer: { current: PointerVec } }) {
+  const { camera } = useThree();
+  const base = useMemo(() => new THREE.Spherical().setFromVector3(new THREE.Vector3(0, 1.9, 9)), []);
+  const current = useRef(new THREE.Spherical().copy(base));
+
+  useFrame(() => {
+    const targetTheta = base.theta - pointer.current.x * 0.4;
+    const targetPhi = THREE.MathUtils.clamp(base.phi - pointer.current.y * 0.22, base.phi - 0.3, base.phi + 0.3);
+    current.current.theta += (targetTheta - current.current.theta) * 0.06;
+    current.current.phi += (targetPhi - current.current.phi) * 0.06;
+    camera.position.setFromSpherical(current.current);
+    camera.lookAt(0, 0, 0);
+  });
+  return null;
+}
+
+function Scene({ categories, docs, pointer }: Props & { pointer: { current: PointerVec } }) {
   const router = useRouter();
   const [active, setActive] = useState<string | null>(null);
   const [ripples, setRipples] = useState<{ id: number; position: THREE.Vector3; color: string }[]>([]);
@@ -386,18 +405,7 @@ function Scene({ categories, docs, engaged }: Props & { engaged: boolean }) {
       <GalaxyField />
       <GalaxyCoreGlow />
       <ambientLight intensity={0.8} />
-      <OrbitControls
-        enabled={engaged}
-        enableZoom
-        enablePan={false}
-        autoRotate
-        autoRotateSpeed={1.4}
-        rotateSpeed={0.65}
-        zoomSpeed={0.8}
-        minDistance={4}
-        maxDistance={22}
-        target={[0, 0, 0]}
-      />
+      <ParallaxRig pointer={pointer} />
 
       <Node
         position={hub}
@@ -478,34 +486,32 @@ function Scene({ categories, docs, engaged }: Props & { engaged: boolean }) {
 }
 
 export default function NeuralNetwork3D({ categories, docs }: Props) {
-  const [engaged, setEngaged] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
+  const pointer = useRef<PointerVec>({ x: 0, y: 0 });
 
-  // 캔버스 바깥을 클릭/탭하면 상호작용을 해제해 스크롤이 다시 자유로워지게 한다.
-  useEffect(() => {
-    if (!engaged) return;
-    const handlePointerDown = (e: PointerEvent) => {
-      if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
-        setEngaged(false);
-      }
-    };
-    document.addEventListener("pointerdown", handlePointerDown);
-    return () => document.removeEventListener("pointerdown", handlePointerDown);
-  }, [engaged]);
+  const handlePointerMove = (e: ReactPointerEvent<HTMLDivElement>) => {
+    const rect = containerRef.current?.getBoundingClientRect();
+    if (!rect) return;
+    pointer.current.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+    pointer.current.y = ((e.clientY - rect.top) / rect.height) * 2 - 1;
+  };
+  const resetPointer = () => {
+    pointer.current.x = 0;
+    pointer.current.y = 0;
+  };
 
   return (
     <div
       ref={containerRef}
-      className={`nx-network-canvas${engaged ? " is-engaged" : ""}`}
+      className="nx-network-canvas"
       role="img"
-      aria-label="카테고리 네트워크 맵 — 클릭하면 드래그로 회전하고 스크롤로 확대할 수 있습니다"
-      onClick={() => setEngaged(true)}
-      onMouseLeave={() => setEngaged(false)}
+      aria-label="카테고리 네트워크 맵 — 마우스를 움직이면 시점이 살짝 따라옵니다"
+      onPointerMove={handlePointerMove}
+      onPointerLeave={resetPointer}
     >
       <Canvas camera={{ position: [0, 1.9, 9], fov: 50 }} gl={{ antialias: true, alpha: true }} dpr={[1, 1.75]}>
-        <Scene categories={categories} docs={docs} engaged={engaged} />
+        <Scene categories={categories} docs={docs} pointer={pointer} />
       </Canvas>
-      {!engaged && <div className="nx-network-hint">클릭해서 회전 · 확대</div>}
     </div>
   );
 }

@@ -5,6 +5,7 @@ import ProfileCard from "@/components/ProfileCard";
 import InterestCards from "@/components/InterestCards";
 import ProjectCards from "@/components/ProjectCards";
 import Reveal from "@/components/Reveal";
+import { IconShieldCheck, IconRun, IconMoonStars } from "@tabler/icons-react";
 
 const PROJECTS = [
   {
@@ -103,7 +104,8 @@ export default function Home() {
             <div className="nx-banner-left">
               <span className="nx-banner-tag">NEW PROJECT</span>
               <strong>
-                🛡️ Daniel IT <em>Infra & Security</em> — 기술 트렌드 레이더
+                <IconShieldCheck className="nx-banner-icon" size={22} stroke={1.8} />
+                Daniel IT <em>Infra & Security</em> — 기술 트렌드 레이더
               </strong>
               <p>국내외 인프라·보안 뉴스를 자동 수집해 지금 가장 뜨는 기술 키워드를 추적합니다.</p>
             </div>
@@ -119,7 +121,8 @@ export default function Home() {
             <div className="nx-banner-left">
               <span className="nx-banner-tag">PROJECT</span>
               <strong>
-                🏃 Pace<em>Lab</em> — 마라톤 훈련 AI 분석
+                <IconRun className="nx-banner-icon" size={22} stroke={1.8} />
+                Pace<em>Lab</em> — 마라톤 훈련 AI 분석
               </strong>
               <p>공식 대회 기록 × 인바디 데이터로 예상 PB와 대회 구간 기록을 예측합니다.</p>
             </div>
@@ -135,7 +138,8 @@ export default function Home() {
             <div className="nx-banner-left">
               <span className="nx-banner-tag">PROJECT</span>
               <strong>
-                🔮 Daniel <em>사주팔자</em> — 데이터로 읽는 명리학
+                <IconMoonStars className="nx-banner-icon" size={22} stroke={1.8} />
+                Daniel <em>사주팔자</em> — 데이터로 읽는 명리학
               </strong>
               <p>생년월일시를 만세력으로 환산해 사주팔자를 분석하고, 나와 상대방의 궁합까지 점수화합니다.</p>
             </div>

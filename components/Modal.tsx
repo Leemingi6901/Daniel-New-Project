@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+import { IconX } from "@tabler/icons-react";
 
 interface ModalProps {
   open: boolean;
@@ -26,7 +27,7 @@ export default function Modal({ open, onClose, children }: ModalProps) {
     <div className={`nx-modal-backdrop ${open ? "is-open" : ""}`} onClick={onClose} aria-hidden={!open}>
       <div className="nx-modal" onClick={(e) => e.stopPropagation()}>
         <button type="button" className="nx-modal-close" onClick={onClose} aria-label="닫기">
-          ✕
+          <IconX size={18} stroke={2} />
         </button>
         {children}
       </div>

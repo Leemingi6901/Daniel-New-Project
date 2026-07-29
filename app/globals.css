@@ -1,4 +1,5 @@
 @import "highlight.js/styles/github-dark.css";
+@import "pretendard/dist/web/static/pretendard-dynamic-subset.css";
 
 :root {
   --blue: #60a5fa;
@@ -356,10 +357,7 @@ a {
 
 .nx em {
   font-style: normal;
-  background: linear-gradient(90deg, var(--nx-accent), var(--nx-accent3), var(--nx-accent2));
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
+  color: var(--nx-accent);
 }
 
 .nx-header {
@@ -428,6 +426,7 @@ a {
 
 .nx-hello {
   color: var(--nx-accent);
+  font-family: var(--nx-mono), monospace;
   font-size: 0.95rem;
   font-weight: 600;
   letter-spacing: 0.06em;
@@ -443,30 +442,13 @@ a {
   margin-top: 6px;
   z-index: 1;
   display: inline-block;
-  background: linear-gradient(
-    100deg,
-    var(--nx-text),
-    var(--nx-accent),
-    var(--nx-accent3),
-    var(--nx-accent2),
-    var(--nx-text)
-  );
-  background-size: 300% 100%;
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  -webkit-text-fill-color: transparent;
-  animation: nx-title-float 3.2s ease-in-out infinite, nx-title-color 7s linear infinite;
+  color: var(--nx-text);
+  animation: nx-title-float 4.5s ease-in-out infinite;
 }
 
 @keyframes nx-title-float {
   0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-8px); }
-}
-
-@keyframes nx-title-color {
-  0% { background-position: 0% 50%; }
-  100% { background-position: 300% 50%; }
+  50% { transform: translateY(-5px); }
 }
 
 .nx-tagline {
@@ -1019,6 +1001,7 @@ a {
 
 .nx-eyebrow {
   color: var(--nx-accent);
+  font-family: var(--nx-mono), monospace;
   font-size: 0.78rem;
   font-weight: 700;
   letter-spacing: 0.28em;
@@ -1096,6 +1079,7 @@ a {
 
 .nx-card-count {
   color: var(--nx-accent);
+  font-family: var(--nx-mono), monospace;
   font-size: 0.8rem;
   font-weight: 600;
 }
@@ -1290,12 +1274,14 @@ a {
 
 .nx-doc-cat {
   color: var(--nx-accent2);
+  font-family: var(--nx-mono), monospace;
   font-size: 0.78rem;
   font-weight: 600;
 }
 
 .nx-doc-side time {
   color: var(--nx-muted);
+  font-family: var(--nx-mono), monospace;
   font-size: 0.78rem;
 }
 
@@ -1317,12 +1303,18 @@ a {
 }
 
 .nx-btn {
-  background: linear-gradient(90deg, var(--nx-accent), var(--nx-accent3), var(--nx-accent2));
-  color: #fff;
+  background: var(--nx-accent);
+  color: #06231f;
   padding: 12px 26px;
   border-radius: 999px;
   font-weight: 700;
   font-size: 0.92rem;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.nx-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 24px rgba(45, 212, 191, 0.25);
 }
 
 .nx-btn-ghost {
@@ -1376,14 +1368,16 @@ a {
   justify-content: space-between;
   align-items: center;
   gap: 20px;
-  border: 1px solid transparent;
+  border: 1px solid var(--nx-border);
   border-radius: 20px;
   padding: 26px 30px;
-  background:
-    linear-gradient(160deg, rgba(14, 16, 23, 0.96), rgba(14, 16, 23, 0.9)) padding-box,
-    linear-gradient(90deg, var(--nx-accent), var(--nx-accent3), var(--nx-accent2)) border-box;
+  background: linear-gradient(160deg, rgba(14, 16, 23, 0.96), rgba(14, 16, 23, 0.9));
   color: var(--nx-text);
-  transition: transform 0.25s, box-shadow 0.25s;
+  transition: transform 0.25s, box-shadow 0.25s, border-color 0.25s;
+}
+
+.nx-banner:hover {
+  border-color: rgba(45, 212, 191, 0.5);
 }
 
 .nx-banner:hover {
@@ -1396,6 +1390,7 @@ a {
   background: rgba(45, 212, 191, 0.12);
   border: 1px solid rgba(45, 212, 191, 0.3);
   color: var(--nx-accent);
+  font-family: var(--nx-mono), monospace;
   font-size: 0.7rem;
   font-weight: 800;
   letter-spacing: 0.18em;
@@ -1405,9 +1400,16 @@ a {
 }
 
 .nx-banner-left strong {
-  display: block;
+  display: flex;
+  align-items: center;
+  gap: 8px;
   font-size: 1.25rem;
   letter-spacing: -0.02em;
+}
+
+.nx-banner-icon {
+  flex-shrink: 0;
+  color: var(--nx-accent);
 }
 
 .nx-banner-left p {

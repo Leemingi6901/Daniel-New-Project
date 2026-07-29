@@ -49,6 +49,22 @@ function clampPoint(p: Pt, w: number, h: number, margin: number): Pt {
   };
 }
 
+// 노드를 평면 원이 아니라 구체처럼 보이게 하는 데 쓰는 색상 보간 — hex를 흰/검 쪽으로 섞는다.
+function mix(hex: string, target: string, amt: number) {
+  const a = parseInt(hex.slice(1), 16);
+  const b = parseInt(target.slice(1), 16);
+  const ar = (a >> 16) & 255;
+  const ag = (a >> 8) & 255;
+  const ab = a & 255;
+  const br = (b >> 16) & 255;
+  const bg = (b >> 8) & 255;
+  const bb = b & 255;
+  const r = Math.round(ar + (br - ar) * amt);
+  const g = Math.round(ag + (bg - ag) * amt);
+  const bl = Math.round(ab + (bb - ab) * amt);
+  return `#${[r, g, bl].map((v) => v.toString(16).padStart(2, "0")).join("")}`;
+}
+
 // 카메라 회전 없이도 입체감이 느껴지도록, 각 노드에 고정된 가상의 깊이(z)를 부여한다.
 // z가 클수록 "카메라에 가까운" 노드로 취급해 크고 밝고 선명하게, 작을수록 멀리 흐릿하게 그린다.
 function depthScale(z: number) {
@@ -115,6 +131,10 @@ interface NodeProps {
   blur: number;
   glowOpacity: number;
   labelOpacity: number;
+  spinDuration: number;
+  spinReverse?: boolean;
+  ring?: boolean;
+  pulse?: boolean;
   onEnter: () => void;
   onLeave: () => void;
   onClick?: () => void;
@@ -134,6 +154,10 @@ function Node2D({
   blur,
   glowOpacity,
   labelOpacity,
+  spinDuration,
+  spinReverse,
+  ring,
+  pulse,
   onEnter,
   onLeave,
   onClick,
@@ -141,6 +165,7 @@ function Node2D({
   const finalLabelOpacity = active ? 1 : labelMode === "hover" ? 0 : labelOpacity;
   const finalGlowOpacity = active ? Math.max(glowOpacity, 0.9) : glowOpacity;
   const scaledR = round2(r * scale);
+  const planetId = glowId.replace("glow-", "planet-");
 
   return (
     <g
@@ -151,8 +176,28 @@ function Node2D({
       onClick={onClick}
     >
       <g style={blur > 0.05 ? { filter: `blur(${blur}px)` } : undefined}>
-        <circle r={scaledR * 3.4} className="nx-node-glow" fill={`url(#${glowId})`} style={{ opacity: finalGlowOpacity }} />
-        <circle r={scaledR} className="nx-node-core" fill={color} />
+        {ring && (
+          <ellipse
+            rx={scaledR * 2.05}
+            ry={scaledR * 0.6}
+            className="nx-node-ring"
+            transform="rotate(-16)"
+            fill="none"
+            stroke={color}
+          />
+        )}
+        <circle
+          r={scaledR * 3.4}
+          className={`nx-node-glow${pulse ? " nx-node-glow-pulse" : ""}`}
+          fill={`url(#${glowId})`}
+          style={{ opacity: finalGlowOpacity }}
+        />
+        <g
+          className="nx-planet-spin"
+          style={{ animationDuration: `${spinDuration}s`, animationDirection: spinReverse ? "reverse" : "normal" }}
+        >
+          <circle r={scaledR} className="nx-node-core" fill={`url(#${planetId})`} />
+        </g>
       </g>
       {label && (
         <text y={scaledR + 16} textAnchor="middle" className={`nx-node-label${bold ? " is-bold" : ""}`} style={{ opacity: finalLabelOpacity }}>
@@ -218,6 +263,9 @@ function NetworkSvg({ width, height, categories, docs }: Props & { width: number
         blur: 0,
         glowOpacity: 1,
         labelOpacity: 1,
+        spinDuration: 70,
+        ring: true,
+        pulse: true,
         onEnter: () => setActive("hub"),
         onLeave: () => setActive((k) => (k === "hub" ? null : k)),
       },
@@ -245,6 +293,8 @@ function NetworkSvg({ width, height, categories, docs }: Props & { width: number
         blur: depthBlur(catZ),
         glowOpacity: depthOpacity(catZ),
         labelOpacity: Math.max(0.8, depthOpacity(catZ)),
+        spinDuration: round2(46 + pseudo(i * 6.4 + 41) * 40),
+        spinReverse: pseudo(i * 3.7 + 51) > 0.5,
         onEnter: () => setActive(c.key),
         onLeave: () => setActive((k) => (k === c.key ? null : k)),
         onClick: () => document.getElementById("categories")?.scrollIntoView({ behavior: "smooth" }),
@@ -271,6 +321,8 @@ function NetworkSvg({ width, height, categories, docs }: Props & { width: number
           blur: depthBlur(leafZ),
           glowOpacity: depthOpacity(leafZ),
           labelOpacity: 1,
+          spinDuration: round2(30 + pseudo(seedBase + j * 8.2 + 61) * 34),
+          spinReverse: pseudo(seedBase + j * 4.4 + 71) > 0.5,
           onEnter: () => setActive(leafKey),
           onLeave: () => setActive((k) => (k === leafKey ? null : k)),
           onClick: () => router.push(`/wiki/${d.category}/${d.slug}`),
@@ -296,16 +348,32 @@ function NetworkSvg({ width, height, categories, docs }: Props & { width: number
             <stop offset="100%" stopColor={color} stopOpacity="0" />
           </radialGradient>
         ))}
+        {/* 광원이 한쪽에서 비추는 것처럼 하이라이트를 offset해 원을 구체(행성)처럼 보이게 한다 */}
+        {[
+          ["planet-accent", ACCENT],
+          ["planet-accent2", ACCENT2],
+          ["planet-accent3", ACCENT3],
+        ].map(([id, color]) => (
+          <radialGradient key={id} id={id} cx="36%" cy="32%" r="75%">
+            <stop offset="0%" stopColor={mix(color, "#ffffff", 0.7)} />
+            <stop offset="45%" stopColor={color} />
+            <stop offset="100%" stopColor={mix(color, "#000000", 0.58)} />
+          </radialGradient>
+        ))}
       </defs>
 
       {categories.map((c, i) => {
         const pos = catPositions.get(c.key)!;
         const catDocs = docs.filter((d) => d.category === c.key);
         const isCatActive = active === c.key || catDocs.some((d) => active === `${d.category}/${d.slug}`);
+        const catEdgeD = curvePath(hub, pos, i * 3.3 + 1);
 
         return (
           <g key={c.key}>
-            <path d={curvePath(hub, pos, i * 3.3 + 1)} className={`nx-edge${isCatActive ? " is-active" : ""}`} stroke={ACCENT} fill="none" />
+            <path d={catEdgeD} className={`nx-edge${isCatActive ? " is-active" : ""}`} stroke={ACCENT} fill="none" />
+            <circle r={2.2} className="nx-edge-pulse" fill={ACCENT}>
+              <animateMotion dur={`${4 + i * 0.6}s`} begin={`${i * 0.9}s`} repeatCount="indefinite" path={catEdgeD} />
+            </circle>
             {catDocs.map((d, j) => {
               const leafKey = `${d.category}/${d.slug}`;
               const isDocActive = active === leafKey || active === c.key;

@@ -857,12 +857,39 @@ a {
   transition: opacity 0.3s ease;
 }
 
+.nx-node-glow-pulse {
+  animation: nx-hub-pulse 5s ease-in-out infinite;
+}
+
+@keyframes nx-hub-pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.08); }
+}
+
+.nx-planet-spin {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation-name: nx-planet-spin;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+
+@keyframes nx-planet-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
 .nx-node-core {
   transition: filter 0.25s ease, r 0.3s ease;
 }
 
 .nx-node.is-active .nx-node-core {
   filter: brightness(1.3);
+}
+
+.nx-node-ring {
+  stroke-width: 1.4px;
+  stroke-opacity: 0.4;
 }
 
 .nx-node-label {
@@ -908,6 +935,12 @@ a {
 .nx-edge-leaf.is-active {
   stroke-width: 1.6px;
   opacity: 0.85;
+}
+
+.nx-edge-pulse {
+  opacity: 0.85;
+  filter: drop-shadow(0 0 3px #22d3ee);
+  pointer-events: none;
 }
 
 .nx-scroll-hint {

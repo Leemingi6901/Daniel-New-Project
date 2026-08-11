@@ -1058,11 +1058,144 @@ a {
   }
 }
 
-/* 관심 분야 카드 — 인트로 옆에 나란히 붙는 세로 리스트 */
-.nx-cards-3 {
+/* 관심 분야 스크롤 패널 — sticky 아이콘 패널이 지금 뷰포트 중앙을 지나는 블록에 맞춰
+   크로스페이드된다. animejs.com의 스크롤 고정 데모 패널 컨셉을 위키 성격에 맞게 옮긴 것. */
+.nx-interest-scroll {
+  display: grid;
+  grid-template-columns: minmax(180px, 240px) 1fr;
+  gap: 32px;
+  align-items: start;
+}
+
+.nx-interest-visual {
+  --nx-interest-accent: 34, 211, 238;
+  position: sticky;
+  top: 110px;
+  height: 300px;
+  border-radius: 24px;
+  border: 1px solid var(--nx-border);
+  background: linear-gradient(160deg, rgba(255, 255, 255, 0.035), rgba(255, 255, 255, 0.008));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  transition: border-color 0.5s;
+  border-color: rgba(var(--nx-interest-accent), 0.4);
+}
+
+.nx-interest-glow {
+  position: absolute;
+  inset: -40%;
+  background: radial-gradient(closest-side, rgba(var(--nx-interest-accent), 0.22), transparent 70%);
+  animation: nx-interest-pulse 4.5s ease-in-out infinite;
+  transition: background 0.5s;
+  pointer-events: none;
+}
+
+@keyframes nx-interest-pulse {
+  0%, 100% { transform: scale(1); opacity: 0.9; }
+  50% { transform: scale(1.15); opacity: 0.65; }
+}
+
+.nx-interest-icon-wrap {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 96px;
+  height: 96px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(var(--nx-interest-accent), 0.5);
+  background: rgba(var(--nx-interest-accent), 0.1);
+  color: rgb(var(--nx-interest-accent));
+  opacity: 0;
+  transform: scale(0.7) rotate(-8deg);
+  transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1), transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.nx-interest-icon-wrap.is-active {
+  opacity: 1;
+  transform: scale(1) rotate(0deg);
+}
+
+.nx-interest-dots {
+  position: absolute;
+  bottom: 20px;
+  display: flex;
+  gap: 8px;
+}
+
+.nx-interest-dots span {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--nx-border);
+  transition: background 0.4s, transform 0.4s;
+}
+
+.nx-interest-dots span.is-active {
+  background: rgb(var(--nx-interest-accent));
+  transform: scale(1.4);
+}
+
+.nx-interest-list {
   display: flex;
   flex-direction: column;
-  gap: 14px;
+}
+
+.nx-interest-block {
+  min-height: 42vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 24px 4px;
+  border-top: 1px solid var(--nx-border);
+  opacity: 0.4;
+  transition: opacity 0.5s;
+}
+
+.nx-interest-block:first-child {
+  border-top: none;
+}
+
+.nx-interest-block.is-active {
+  opacity: 1;
+}
+
+.nx-interest-index {
+  font-family: var(--nx-mono), monospace;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--nx-muted);
+  letter-spacing: 0.1em;
+  margin-bottom: 10px;
+}
+
+.nx-interest-block h3 {
+  font-size: 1.3rem;
+  margin-bottom: 10px;
+}
+
+.nx-interest-block p {
+  color: var(--nx-muted);
+  font-size: 0.98rem;
+  line-height: 1.8;
+  max-width: 42ch;
+}
+
+@media (max-width: 768px) {
+  .nx-interest-scroll {
+    grid-template-columns: 1fr;
+  }
+
+  .nx-interest-visual {
+    position: static;
+    height: 220px;
+  }
+
+  .nx-interest-block {
+    min-height: 0;
+  }
 }
 
 .nx-card {

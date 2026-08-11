@@ -142,7 +142,7 @@ export default function Home() {
       {/* 01 About */}
       <section className="nx-section nx-about" id="about">
         <div className="nx-about-head">
-          <Reveal>
+          <Reveal stagger>
             <span className="nx-eyebrow">01 — ABOUT</span>
             <h2>
               요즘 이런 것들에 <em>집중</em>하고 있습니다
@@ -157,7 +157,7 @@ export default function Home() {
 
       {/* 02 Projects */}
       <section className="nx-section" id="projects">
-        <Reveal>
+        <Reveal stagger>
           <span className="nx-eyebrow">02 — PROJECTS</span>
           <h2>
             직접 만들고 <em>운영</em>한 것들
@@ -168,7 +168,7 @@ export default function Home() {
 
       {/* 03 Wiki */}
       <section className="nx-section" id="wiki">
-        <Reveal>
+        <Reveal stagger>
           <span className="nx-eyebrow">03 — LEARNING WIKI</span>
           <h2>
             경험/기술 <em>기록</em>
@@ -199,7 +199,7 @@ export default function Home() {
 
       {/* 04 Contact */}
       <section className="nx-section nx-cta" id="contact">
-        <Reveal>
+        <Reveal stagger>
           <span className="nx-eyebrow">04 — CONTACT</span>
           <h2>
             더 자세히 <em>알아보고</em> 싶다면

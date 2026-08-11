@@ -7,7 +7,7 @@
   --text: #e8ebf2;
   --text-muted: #98a0b3;
   --border: #1d2230;
-  --bg: #0a0b10;
+  --bg: #060709;
   --bg-gray: #10131c;
 }
 
@@ -17,22 +17,17 @@
   box-sizing: border-box;
 }
 
-/* 사이트 전체에 깔리는 우주 배경 — 랜딩(.nx)과 위키 읽기 페이지(.site-*)가 같은 톤을 공유한다 */
+/* 사이트 전체에 깔리는 배경 — 랜딩(.nx)과 위키 읽기 페이지(.site-*)가 같은 톤을 공유한다.
+   장식용 별빛을 최소화하고 여백이 많은 순검정에 가까운 캔버스로 대비를 높였다. */
 body {
   font-family: "Apple SD Gothic Neo", "Pretendard", -apple-system, sans-serif;
   color: var(--text);
   background:
-    radial-gradient(1.5px 1.5px at 8% 15%, rgba(255, 255, 255, 0.55), transparent),
-    radial-gradient(1px 1px at 24% 70%, rgba(255, 255, 255, 0.4), transparent),
-    radial-gradient(1.5px 1.5px at 40% 30%, rgba(255, 255, 255, 0.5), transparent),
-    radial-gradient(1px 1px at 58% 85%, rgba(255, 255, 255, 0.35), transparent),
-    radial-gradient(1.5px 1.5px at 70% 18%, rgba(255, 255, 255, 0.55), transparent),
-    radial-gradient(1px 1px at 84% 60%, rgba(255, 255, 255, 0.4), transparent),
-    radial-gradient(1.5px 1.5px at 94% 35%, rgba(255, 255, 255, 0.5), transparent),
-    radial-gradient(1px 1px at 14% 92%, rgba(255, 255, 255, 0.35), transparent),
-    radial-gradient(700px 520px at 15% 8%, rgba(34, 211, 238, 0.05), transparent 70%),
-    radial-gradient(650px 500px at 88% 22%, rgba(163, 230, 53, 0.04), transparent 70%),
-    radial-gradient(700px 540px at 50% 96%, rgba(251, 113, 133, 0.045), transparent 70%),
+    radial-gradient(1.5px 1.5px at 12% 18%, rgba(255, 255, 255, 0.4), transparent),
+    radial-gradient(1.5px 1.5px at 68% 12%, rgba(255, 255, 255, 0.35), transparent),
+    radial-gradient(1.5px 1.5px at 90% 60%, rgba(255, 255, 255, 0.3), transparent),
+    radial-gradient(700px 520px at 15% 8%, rgba(34, 211, 238, 0.035), transparent 70%),
+    radial-gradient(700px 540px at 85% 96%, rgba(251, 113, 133, 0.03), transparent 70%),
     var(--bg);
   line-height: 1.7;
 }
@@ -353,7 +348,7 @@ a {
    nx-* : 다크 메인 홈 (뉴럴 네트워크 랜딩)
    ============================================ */
 .nx {
-  --nx-bg: #07080c;
+  --nx-bg: #050608;
   --nx-surface: #0e1017;
   --nx-border: #1d2230;
   --nx-text: #eef1f6;
@@ -361,20 +356,15 @@ a {
   --nx-accent: #22d3ee;
   --nx-accent2: #fb7185;
   --nx-accent3: #a3e635;
+  /* animejs.com처럼 순검정에 가까운 캔버스 + 절제된 컬러 글로우 두 점만 남겨 대비를 높였다
+     (기존엔 별 9개 + 그리드 도트 패턴까지 겹쳐 콘텐츠와 경쟁하는 느낌이었다) */
   background:
-    radial-gradient(1.5px 1.5px at 6% 10%, rgba(255, 255, 255, 0.55), transparent),
-    radial-gradient(1px 1px at 18% 62%, rgba(255, 255, 255, 0.38), transparent),
-    radial-gradient(1.5px 1.5px at 32% 22%, rgba(255, 255, 255, 0.5), transparent),
-    radial-gradient(1px 1px at 48% 78%, rgba(255, 255, 255, 0.32), transparent),
-    radial-gradient(1.5px 1.5px at 62% 12%, rgba(255, 255, 255, 0.55), transparent),
-    radial-gradient(1px 1px at 76% 50%, rgba(255, 255, 255, 0.38), transparent),
-    radial-gradient(1.5px 1.5px at 90% 28%, rgba(255, 255, 255, 0.5), transparent),
-    radial-gradient(1px 1px at 10% 88%, rgba(255, 255, 255, 0.32), transparent),
-    radial-gradient(1.5px 1.5px at 97% 68%, rgba(255, 255, 255, 0.45), transparent),
-    radial-gradient(650px 500px at 12% 8%, rgba(34, 211, 238, 0.055), transparent 70%),
-    radial-gradient(600px 480px at 88% 18%, rgba(163, 230, 53, 0.045), transparent 70%),
-    radial-gradient(650px 520px at 50% 95%, rgba(251, 113, 133, 0.05), transparent 70%),
-    radial-gradient(rgba(139, 147, 167, 0.055) 1px, transparent 1px) 0 0 / 34px 34px,
+    radial-gradient(1.5px 1.5px at 14% 16%, rgba(255, 255, 255, 0.4), transparent),
+    radial-gradient(1.5px 1.5px at 62% 10%, rgba(255, 255, 255, 0.32), transparent),
+    radial-gradient(1.5px 1.5px at 92% 30%, rgba(255, 255, 255, 0.36), transparent),
+    radial-gradient(1.5px 1.5px at 8% 82%, rgba(255, 255, 255, 0.28), transparent),
+    radial-gradient(650px 500px at 12% 8%, rgba(34, 211, 238, 0.045), transparent 70%),
+    radial-gradient(650px 520px at 88% 92%, rgba(251, 113, 133, 0.035), transparent 70%),
     var(--nx-bg);
   color: var(--nx-text);
   min-height: 100vh;
@@ -438,9 +428,9 @@ a {
   position: absolute;
   inset: -20%;
   background:
-    radial-gradient(600px 400px at 25% 20%, rgba(34, 211, 238, 0.14), transparent 70%),
-    radial-gradient(560px 420px at 78% 30%, rgba(163, 230, 53, 0.1), transparent 70%),
-    radial-gradient(600px 400px at 60% 80%, rgba(251, 113, 133, 0.11), transparent 70%);
+    radial-gradient(600px 400px at 25% 20%, rgba(34, 211, 238, 0.1), transparent 70%),
+    radial-gradient(560px 420px at 78% 30%, rgba(163, 230, 53, 0.07), transparent 70%),
+    radial-gradient(600px 400px at 60% 80%, rgba(251, 113, 133, 0.08), transparent 70%);
   pointer-events: none;
   animation: nx-aurora 22s ease-in-out infinite;
 }
@@ -453,24 +443,24 @@ a {
 .nx-hello {
   color: var(--nx-accent);
   font-family: var(--nx-mono), monospace;
-  font-size: 0.95rem;
-  font-weight: 600;
-  letter-spacing: 0.06em;
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
   z-index: 1;
 }
 
 .nx-hero h1 {
   position: relative;
   font-family: var(--nx-display), sans-serif;
-  font-size: clamp(3rem, 8vw, 5.4rem);
+  font-size: clamp(3.6rem, 10vw, 7.4rem);
   font-weight: 700;
-  letter-spacing: -0.04em;
-  line-height: 1.1;
-  margin-top: 6px;
+  letter-spacing: -0.05em;
+  line-height: 1.02;
+  margin-top: 10px;
   z-index: 1;
   display: inline-block;
   color: var(--nx-text);
-  animation: nx-title-in 0.8s ease-out both;
+  animation: nx-title-in 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
 @keyframes nx-title-in {
@@ -1016,11 +1006,11 @@ a {
   }
 }
 
-/* 스크롤 리빌 */
+/* 스크롤 리빌 — animejs.com처럼 조금 더 짧고 힘있게 튀어 오르는 이징으로 교체 */
 .reveal {
   opacity: 0;
-  transform: translateY(28px);
-  transition: opacity 0.7s ease, transform 0.7s ease;
+  transform: translateY(24px);
+  transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .reveal.visible {
@@ -1032,6 +1022,22 @@ a {
 .reveal.delay-2 { transition-delay: 0.16s; }
 .reveal.delay-3 { transition-delay: 0.24s; }
 .reveal.delay-4 { transition-delay: 0.32s; }
+
+/* stagger 모드 — eyebrow → 헤드라인 → 본문 순서로 한 박자씩 늦게 들어온다 */
+.reveal-group {
+  opacity: 1;
+}
+
+.reveal-child {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.reveal-group.visible .reveal-child {
+  opacity: 1;
+  transform: none;
+}
 
 /* 카테고리 카드 — bento: 문서가 가장 많은 카테고리가 2칸 차지 */
 .nx-cards {
@@ -1060,12 +1066,29 @@ a {
 }
 
 .nx-card {
+  position: relative;
+  overflow: hidden;
   background: linear-gradient(160deg, rgba(255, 255, 255, 0.035), rgba(255, 255, 255, 0.008));
   border: 1px solid var(--nx-border);
   border-radius: 18px;
   padding: 28px 24px;
   height: 100%;
   transition: border-color 0.25s, transform 0.25s, box-shadow 0.25s;
+}
+
+/* 호버 시 카드 위를 대각선으로 스치는 라이트 시늉 — animejs.com 카드들의 "살아있는" 느낌 참고 */
+.nx-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(115deg, transparent 40%, rgba(255, 255, 255, 0.07) 50%, transparent 60%);
+  transform: translateX(-120%);
+  transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: none;
+}
+
+.nx-card:hover::after {
+  transform: translateX(120%);
 }
 
 .nx-card-btn {
@@ -1095,10 +1118,16 @@ a {
 }
 
 .nx-card-count {
+  display: inline-block;
   color: var(--nx-accent);
   font-family: var(--nx-mono), monospace;
   font-size: 0.8rem;
   font-weight: 600;
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.nx-card:hover .nx-card-count {
+  transform: translateX(3px);
 }
 
 /* 프로젝트 캐러셀 */
@@ -1175,6 +1204,8 @@ a {
 }
 
 .nx-project {
+  position: relative;
+  overflow: hidden;
   background: linear-gradient(160deg, rgba(255, 255, 255, 0.035), rgba(255, 255, 255, 0.008));
   border: 1px solid var(--nx-border);
   border-radius: 18px;
@@ -1185,10 +1216,24 @@ a {
   transition: border-color 0.25s, transform 0.25s, box-shadow 0.25s;
 }
 
+.nx-project::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(115deg, transparent 40%, rgba(255, 255, 255, 0.07) 50%, transparent 60%);
+  transform: translateX(-120%);
+  transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: none;
+}
+
 .nx-project:hover {
   border-color: rgba(251, 113, 133, 0.5);
   transform: translateY(-4px);
   box-shadow: 0 14px 40px rgba(251, 113, 133, 0.12);
+}
+
+.nx-project:hover::after {
+  transform: translateX(120%);
 }
 
 .nx-project-head {
@@ -1241,10 +1286,16 @@ a {
 }
 
 .nx-project-link {
+  display: inline-block;
   color: var(--nx-accent);
   font-size: 0.82rem;
   font-weight: 700;
   white-space: nowrap;
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.nx-project:hover .nx-project-link:not(.nx-project-private) {
+  transform: translateX(3px);
 }
 
 .nx-project-private {
@@ -1475,6 +1526,11 @@ a {
 .nx-banner-icon {
   flex-shrink: 0;
   color: var(--nx-accent);
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.nx-banner-row:hover .nx-banner-icon {
+  transform: scale(1.15) rotate(-6deg);
 }
 
 .nx-banner-row-text p {
@@ -1488,9 +1544,15 @@ a {
 
 .nx-banner-cta {
   flex-shrink: 0;
+  display: inline-block;
   color: var(--nx-accent);
   font-weight: 800;
   font-size: 0.95rem;
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.nx-banner-row:hover .nx-banner-cta {
+  transform: translateX(4px);
 }
 
 @media (max-width: 640px) {

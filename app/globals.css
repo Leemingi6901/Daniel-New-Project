@@ -981,29 +981,12 @@ a {
   margin: 10px 0 36px;
 }
 
-/* About — 인트로 + 오프셋 카드 비대칭 레이아웃 */
-.nx-about {
-  display: grid;
-  grid-template-columns: minmax(220px, 320px) 1fr;
-  gap: 20px 56px;
-  align-items: start;
-}
-
-.nx-about-head h2 {
-  margin-bottom: 14px;
-}
-
+/* About 인트로 문단 — 이제 레이아웃은 .nx-scroll-panel이 담당하고, 이건 텍스트 스타일만 */
 .nx-about-intro {
   color: var(--nx-muted);
   font-size: 0.92rem;
   line-height: 1.7;
   max-width: 30ch;
-}
-
-@media (max-width: 768px) {
-  .nx-about {
-    grid-template-columns: 1fr;
-  }
 }
 
 /* 스크롤 리빌 — animejs.com처럼 조금 더 짧고 힘있게 튀어 오르는 이징으로 교체 */
@@ -1039,39 +1022,32 @@ a {
   transform: none;
 }
 
-/* 카테고리 카드 — bento: 문서가 가장 많은 카테고리가 2칸 차지 */
-.nx-cards {
+/* 스크롤 패널 — About/Projects/Wiki 세 섹션이 공유하는 레이아웃. 왼쪽은 헤더+아이콘
+   패널이 통째로 sticky로 붙어있다가, 오른쪽에 쌓인 블록 중 지금 뷰포트 중앙을 지나는
+   것에 맞춰 아이콘·색을 크로스페이드한다. animejs.com의 스크롤 고정 데모 패널 컨셉을
+   위키 성격에 맞게 옮긴 것. */
+.nx-scroll-panel {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 18px;
-}
-
-@media (max-width: 860px) {
-  .nx-cards {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-@media (max-width: 480px) {
-  .nx-cards {
-    grid-template-columns: 1fr;
-  }
-}
-
-/* 관심 분야 스크롤 패널 — sticky 아이콘 패널이 지금 뷰포트 중앙을 지나는 블록에 맞춰
-   크로스페이드된다. animejs.com의 스크롤 고정 데모 패널 컨셉을 위키 성격에 맞게 옮긴 것. */
-.nx-interest-scroll {
-  display: grid;
-  grid-template-columns: minmax(180px, 240px) 1fr;
-  gap: 32px;
+  grid-template-columns: minmax(240px, 360px) 1fr;
+  gap: 40px;
   align-items: start;
 }
 
-.nx-interest-visual {
-  --nx-interest-accent: 34, 211, 238;
+.nx-scroll-sticky {
   position: sticky;
   top: 110px;
-  height: 300px;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+.nx-scroll-header h2 {
+  margin: 10px 0 14px;
+}
+
+.nx-scroll-visual {
+  --nx-scroll-accent: 34, 211, 238;
+  height: 260px;
   border-radius: 24px;
   border: 1px solid var(--nx-border);
   background: linear-gradient(160deg, rgba(255, 255, 255, 0.035), rgba(255, 255, 255, 0.008));
@@ -1079,25 +1055,26 @@ a {
   align-items: center;
   justify-content: center;
   overflow: hidden;
+  position: relative;
   transition: border-color 0.5s;
-  border-color: rgba(var(--nx-interest-accent), 0.4);
+  border-color: rgba(var(--nx-scroll-accent), 0.4);
 }
 
-.nx-interest-glow {
+.nx-scroll-glow {
   position: absolute;
   inset: -40%;
-  background: radial-gradient(closest-side, rgba(var(--nx-interest-accent), 0.22), transparent 70%);
-  animation: nx-interest-pulse 4.5s ease-in-out infinite;
+  background: radial-gradient(closest-side, rgba(var(--nx-scroll-accent), 0.22), transparent 70%);
+  animation: nx-scroll-pulse 4.5s ease-in-out infinite;
   transition: background 0.5s;
   pointer-events: none;
 }
 
-@keyframes nx-interest-pulse {
+@keyframes nx-scroll-pulse {
   0%, 100% { transform: scale(1); opacity: 0.9; }
   50% { transform: scale(1.15); opacity: 0.65; }
 }
 
-.nx-interest-icon-wrap {
+.nx-scroll-icon-wrap {
   position: absolute;
   display: flex;
   align-items: center;
@@ -1105,27 +1082,27 @@ a {
   width: 96px;
   height: 96px;
   border-radius: 50%;
-  border: 1.5px solid rgba(var(--nx-interest-accent), 0.5);
-  background: rgba(var(--nx-interest-accent), 0.1);
-  color: rgb(var(--nx-interest-accent));
+  border: 1.5px solid rgba(var(--nx-scroll-accent), 0.5);
+  background: rgba(var(--nx-scroll-accent), 0.1);
+  color: rgb(var(--nx-scroll-accent));
   opacity: 0;
   transform: scale(0.7) rotate(-8deg);
   transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1), transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.nx-interest-icon-wrap.is-active {
+.nx-scroll-icon-wrap.is-active {
   opacity: 1;
   transform: scale(1) rotate(0deg);
 }
 
-.nx-interest-dots {
+.nx-scroll-dots {
   position: absolute;
   bottom: 20px;
   display: flex;
   gap: 8px;
 }
 
-.nx-interest-dots span {
+.nx-scroll-dots span {
   width: 6px;
   height: 6px;
   border-radius: 50%;
@@ -1133,17 +1110,17 @@ a {
   transition: background 0.4s, transform 0.4s;
 }
 
-.nx-interest-dots span.is-active {
-  background: rgb(var(--nx-interest-accent));
+.nx-scroll-dots span.is-active {
+  background: rgb(var(--nx-scroll-accent));
   transform: scale(1.4);
 }
 
-.nx-interest-list {
+.nx-scroll-list {
   display: flex;
   flex-direction: column;
 }
 
-.nx-interest-block {
+.nx-scroll-block {
   min-height: 42vh;
   display: flex;
   flex-direction: column;
@@ -1154,15 +1131,15 @@ a {
   transition: opacity 0.5s;
 }
 
-.nx-interest-block:first-child {
+.nx-scroll-block:first-child {
   border-top: none;
 }
 
-.nx-interest-block.is-active {
+.nx-scroll-block.is-active {
   opacity: 1;
 }
 
-.nx-interest-index {
+.nx-scroll-index {
   font-family: var(--nx-mono), monospace;
   font-size: 0.78rem;
   font-weight: 700;
@@ -1171,83 +1148,34 @@ a {
   margin-bottom: 10px;
 }
 
-.nx-interest-block h3 {
+.nx-scroll-block h3 {
   font-size: 1.3rem;
   margin-bottom: 10px;
 }
 
-.nx-interest-block p {
+.nx-scroll-block p {
   color: var(--nx-muted);
   font-size: 0.98rem;
   line-height: 1.8;
   max-width: 42ch;
 }
 
-@media (max-width: 768px) {
-  .nx-interest-scroll {
+@media (max-width: 860px) {
+  .nx-scroll-panel {
     grid-template-columns: 1fr;
   }
 
-  .nx-interest-visual {
+  .nx-scroll-sticky {
     position: static;
+  }
+
+  .nx-scroll-visual {
     height: 220px;
   }
 
-  .nx-interest-block {
+  .nx-scroll-block {
     min-height: 0;
   }
-}
-
-.nx-card {
-  position: relative;
-  overflow: hidden;
-  background: linear-gradient(160deg, rgba(255, 255, 255, 0.035), rgba(255, 255, 255, 0.008));
-  border: 1px solid var(--nx-border);
-  border-radius: 18px;
-  padding: 28px 24px;
-  height: 100%;
-  transition: border-color 0.25s, transform 0.25s, box-shadow 0.25s;
-}
-
-/* 호버 시 카드 위를 대각선으로 스치는 라이트 시늉 — animejs.com 카드들의 "살아있는" 느낌 참고 */
-.nx-card::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(115deg, transparent 40%, rgba(255, 255, 255, 0.07) 50%, transparent 60%);
-  transform: translateX(-120%);
-  transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
-  pointer-events: none;
-}
-
-.nx-card:hover::after {
-  transform: translateX(120%);
-}
-
-.nx-card-btn {
-  display: block;
-  width: 100%;
-  text-align: left;
-  font: inherit;
-  color: inherit;
-  cursor: pointer;
-}
-
-.nx-card:hover {
-  border-color: rgba(34, 211, 238, 0.55);
-  transform: translateY(-4px);
-  box-shadow: 0 14px 40px rgba(34, 211, 238, 0.14);
-}
-
-.nx-card h3 {
-  font-size: 1.05rem;
-  margin-bottom: 8px;
-}
-
-.nx-card p {
-  color: var(--nx-muted);
-  font-size: 0.88rem;
-  margin-bottom: 16px;
 }
 
 .nx-card-count {
@@ -1263,112 +1191,7 @@ a {
   transform: translateX(3px);
 }
 
-/* 프로젝트 캐러셀 */
-.nx-carousel {
-  position: relative;
-}
-
-.nx-projects {
-  display: flex;
-  gap: 18px;
-  overflow-x: auto;
-  scroll-snap-type: x mandatory;
-  scroll-behavior: smooth;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-  padding-bottom: 2px;
-}
-
-.nx-projects::-webkit-scrollbar {
-  display: none;
-}
-
-.nx-projects > .reveal {
-  flex: 0 0 calc((100% - 36px) / 3);
-  min-width: 260px;
-  scroll-snap-align: start;
-}
-
-/* 첫 프로젝트(이 사이트 자신)를 featured 카드로 강조 */
-.nx-projects > .reveal:first-child {
-  flex: 0 0 min(400px, 86%);
-}
-
-.nx-projects > .reveal:first-child .nx-project {
-  padding: 34px 30px;
-  background: linear-gradient(160deg, rgba(34, 211, 238, 0.1), rgba(255, 255, 255, 0.02));
-  border-color: rgba(34, 211, 238, 0.35);
-}
-
-.nx-projects > .reveal:first-child .nx-project h3 {
-  font-size: 1.3rem;
-}
-
-.nx-carousel-controls {
-  display: flex;
-  justify-content: flex-end;
-  gap: 10px;
-  margin-top: 16px;
-}
-
-.nx-carousel-btn {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  border: 1px solid var(--nx-border);
-  background: var(--nx-surface);
-  color: var(--nx-text);
-  font-size: 1.2rem;
-  line-height: 1;
-  cursor: pointer;
-  transition: border-color 0.2s, color 0.2s, transform 0.2s;
-}
-
-.nx-carousel-btn:hover {
-  border-color: var(--nx-accent);
-  color: var(--nx-accent);
-  transform: translateY(-2px);
-}
-
-@media (max-width: 860px) {
-  .nx-projects > .reveal {
-    flex: 0 0 82%;
-  }
-}
-
-.nx-project {
-  position: relative;
-  overflow: hidden;
-  background: linear-gradient(160deg, rgba(255, 255, 255, 0.035), rgba(255, 255, 255, 0.008));
-  border: 1px solid var(--nx-border);
-  border-radius: 18px;
-  padding: 28px 24px;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  transition: border-color 0.25s, transform 0.25s, box-shadow 0.25s;
-}
-
-.nx-project::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(115deg, transparent 40%, rgba(255, 255, 255, 0.07) 50%, transparent 60%);
-  transform: translateX(-120%);
-  transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
-  pointer-events: none;
-}
-
-.nx-project:hover {
-  border-color: rgba(251, 113, 133, 0.5);
-  transform: translateY(-4px);
-  box-shadow: 0 14px 40px rgba(251, 113, 133, 0.12);
-}
-
-.nx-project:hover::after {
-  transform: translateX(120%);
-}
-
+/* 프로젝트 스크롤 블록 내부 콘텐츠 — 카드 박스 없이 .nx-scroll-block 안에 바로 놓인다 */
 .nx-project-head {
   display: flex;
   justify-content: space-between;
@@ -1378,20 +1201,14 @@ a {
 }
 
 .nx-project-head h3 {
-  font-size: 1.1rem;
+  font-size: 1.3rem;
+  margin-bottom: 0;
 }
 
 .nx-project-period {
   color: var(--nx-muted);
   font-size: 0.78rem;
   white-space: nowrap;
-}
-
-.nx-project > p {
-  color: var(--nx-muted);
-  font-size: 0.9rem;
-  line-height: 1.7;
-  flex: 1;
 }
 
 .nx-project-foot {
@@ -1427,7 +1244,7 @@ a {
   transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.nx-project:hover .nx-project-link:not(.nx-project-private) {
+.nx-scroll-block:hover .nx-project-link:not(.nx-project-private) {
   transform: translateX(3px);
 }
 

@@ -1,12 +1,26 @@
 import Link from "next/link";
+import type { ReactNode } from "react";
 import { CATEGORIES, listDocs } from "@/lib/wiki";
 import NeuralNetworkOrganic from "@/components/NeuralNetworkOrganic";
 import ProfileCard from "@/components/ProfileCard";
-import InterestScrollPanel from "@/components/InterestScrollPanel";
-import ProjectCards from "@/components/ProjectCards";
+import ScrollPanel from "@/components/ScrollPanel";
 import DocList from "@/components/DocList";
 import Reveal from "@/components/Reveal";
-import { IconShieldCheck, IconRun, IconMoonStars, IconServer2, IconShieldLock, IconBrain } from "@tabler/icons-react";
+import {
+  IconShieldCheck,
+  IconRun,
+  IconMoonStars,
+  IconServer2,
+  IconShieldLock,
+  IconBrain,
+  IconBook2,
+  IconRobot,
+  IconTrendingUp,
+  IconCode,
+  IconTools,
+} from "@tabler/icons-react";
+
+const BRAND_ACCENTS = ["34, 211, 238", "251, 113, 133", "163, 230, 53"];
 
 const PROJECTS = [
   {
@@ -16,6 +30,7 @@ const PROJECTS = [
     stack: ["Next.js 16", "SSG", "Vercel"],
     link: "https://github.com/Leemingi6901/Daniel-New-Project",
     linkLabel: "GitHub ↗",
+    icon: <IconBook2 size={56} stroke={1.4} />,
   },
   {
     name: "OpenClaw AI 비서",
@@ -24,6 +39,7 @@ const PROJECTS = [
     stack: ["OpenClaw", "Ollama", "launchd"],
     link: null,
     linkLabel: "Private",
+    icon: <IconRobot size={56} stroke={1.4} />,
   },
   {
     name: "Daily Growth",
@@ -32,6 +48,7 @@ const PROJECTS = [
     stack: ["Next.js", "Prisma", "Ollama", "크롤링"],
     link: null,
     linkLabel: "Private",
+    icon: <IconTrendingUp size={56} stroke={1.4} />,
   },
   {
     name: "RUN-Project",
@@ -40,6 +57,7 @@ const PROJECTS = [
     stack: ["Next.js", "Prisma", "SQLite"],
     link: null,
     linkLabel: "Private",
+    icon: <IconRun size={56} stroke={1.4} />,
   },
 ];
 
@@ -48,21 +66,28 @@ const INTERESTS = [
     title: "인프라 · 자동화",
     body: "리눅스, 홈서버, launchd/cron 자동화. '한 번 만들면 알아서 돌아가는 것'을 좋아합니다.",
     icon: <IconServer2 size={56} stroke={1.4} />,
-    accent: "34, 211, 238",
+    accent: BRAND_ACCENTS[0],
   },
   {
     title: "네트워크 보안",
     body: "트래픽 분석, 취약점 진단, 위협 대응. 시스템을 지키는 관점에서 기술을 들여다봅니다.",
     icon: <IconShieldLock size={56} stroke={1.4} />,
-    accent: "251, 113, 133",
+    accent: BRAND_ACCENTS[1],
   },
   {
     title: "AI · LLM",
     body: "로컬 LLM 운영, RAG, AI 에이전트. 직접 굴려보며 한계와 가능성을 몸으로 배우는 중.",
     icon: <IconBrain size={56} stroke={1.4} />,
-    accent: "163, 230, 53",
+    accent: BRAND_ACCENTS[2],
   },
 ];
+
+const CATEGORY_ICONS: Record<string, ReactNode> = {
+  ai: <IconBrain size={56} stroke={1.4} />,
+  web: <IconCode size={56} stroke={1.4} />,
+  infra: <IconServer2 size={56} stroke={1.4} />,
+  tools: <IconTools size={56} stroke={1.4} />,
+};
 
 export default function Home() {
   const docs = listDocs();
@@ -155,50 +180,97 @@ export default function Home() {
       </section>
 
       {/* 01 About */}
-      <section className="nx-section nx-about" id="about">
-        <div className="nx-about-head">
-          <Reveal stagger>
-            <span className="nx-eyebrow">01 — ABOUT</span>
-            <h2>
-              요즘 이런 것들에 <em>집중</em>하고 있습니다
-            </h2>
-            <p className="nx-about-intro">
-              인프라 자동화, 네트워크 보안, AI·LLM 세 갈래를 오가며 직접 굴려보고 기록합니다.
-            </p>
-          </Reveal>
-        </div>
-        <InterestScrollPanel items={INTERESTS} />
+      <section className="nx-section" id="about">
+        <ScrollPanel
+          header={
+            <>
+              <span className="nx-eyebrow">01 — ABOUT</span>
+              <h2>
+                요즘 이런 것들에 <em>집중</em>하고 있습니다
+              </h2>
+              <p className="nx-about-intro">
+                인프라 자동화, 네트워크 보안, AI·LLM 세 갈래를 오가며 직접 굴려보고 기록합니다.
+              </p>
+            </>
+          }
+          items={INTERESTS.map((it) => ({
+            icon: it.icon,
+            accent: it.accent,
+            content: (
+              <>
+                <h3>{it.title}</h3>
+                <p>{it.body}</p>
+              </>
+            ),
+          }))}
+        />
       </section>
 
       {/* 02 Projects */}
       <section className="nx-section" id="projects">
-        <Reveal stagger>
-          <span className="nx-eyebrow">02 — PROJECTS</span>
-          <h2>
-            직접 만들고 <em>운영</em>한 것들
-          </h2>
-        </Reveal>
-        <ProjectCards items={PROJECTS} />
+        <ScrollPanel
+          header={
+            <>
+              <span className="nx-eyebrow">02 — PROJECTS</span>
+              <h2>
+                직접 만들고 <em>운영</em>한 것들
+              </h2>
+            </>
+          }
+          items={PROJECTS.map((p, i) => ({
+            icon: p.icon,
+            accent: BRAND_ACCENTS[i % BRAND_ACCENTS.length],
+            content: (
+              <>
+                <div className="nx-project-head">
+                  <h3>{p.name}</h3>
+                  <span className="nx-project-period">{p.period}</span>
+                </div>
+                <p>{p.description}</p>
+                <div className="nx-project-foot">
+                  <div className="nx-stack">
+                    {p.stack.map((s) => (
+                      <span key={s}>{s}</span>
+                    ))}
+                  </div>
+                  {p.link ? (
+                    <a href={p.link} target="_blank" rel="noreferrer" className="nx-project-link">
+                      {p.linkLabel}
+                    </a>
+                  ) : (
+                    <span className="nx-project-link nx-project-private">{p.linkLabel}</span>
+                  )}
+                </div>
+              </>
+            ),
+          }))}
+        />
       </section>
 
       {/* 03 Wiki */}
       <section className="nx-section" id="wiki">
-        <Reveal stagger>
-          <span className="nx-eyebrow">03 — LEARNING WIKI</span>
-          <h2>
-            경험/기술 <em>기록</em>
-          </h2>
-        </Reveal>
-        <div className="nx-cards" id="categories">
-          {categories.map((c, i) => (
-            <Reveal key={c.key} className={`delay-${i}`}>
-              <div className="nx-card">
-                <h3>{c.name}</h3>
-                <p>{c.description}</p>
-                <span className="nx-card-count">문서 {c.count}개</span>
-              </div>
-            </Reveal>
-          ))}
+        <div id="categories">
+          <ScrollPanel
+            header={
+              <>
+                <span className="nx-eyebrow">03 — LEARNING WIKI</span>
+                <h2>
+                  경험/기술 <em>기록</em>
+                </h2>
+              </>
+            }
+            items={categories.map((c, i) => ({
+              icon: CATEGORY_ICONS[c.key],
+              accent: BRAND_ACCENTS[i % BRAND_ACCENTS.length],
+              content: (
+                <>
+                  <h3>{c.name}</h3>
+                  <p>{c.description}</p>
+                  <span className="nx-card-count">문서 {c.count}개</span>
+                </>
+              ),
+            }))}
+          />
         </div>
         <DocList
           items={docs.slice(0, 10).map((d) => ({

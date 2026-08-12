@@ -1,7 +1,6 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { CATEGORIES, listDocs } from "@/lib/wiki";
-import NeuralNetworkOrganic from "@/components/NeuralNetworkOrganic";
 import ProfileCard from "@/components/ProfileCard";
 import ScrollPanel from "@/components/ScrollPanel";
 import DocList from "@/components/DocList";
@@ -126,12 +125,6 @@ export default function Home() {
           <br />
           제가 경험했던 인프라, 네트워크, 보안 업무를 문서화 하였습니다.
         </p>
-        <div className="nx-network">
-          <NeuralNetworkOrganic
-            categories={categories.map(({ key, name, count }) => ({ key, name, count }))}
-            docs={docs.map(({ category, slug, title }) => ({ category, slug, title }))}
-          />
-        </div>
         <div className="nx-scroll-hint" aria-hidden>
           <span>SCROLL</span>
           <i />
@@ -249,29 +242,27 @@ export default function Home() {
 
       {/* 03 Wiki */}
       <section className="nx-section" id="wiki">
-        <div id="categories">
-          <ScrollPanel
-            header={
+        <ScrollPanel
+          header={
+            <>
+              <span className="nx-eyebrow">03 — LEARNING WIKI</span>
+              <h2>
+                경험/기술 <em>기록</em>
+              </h2>
+            </>
+          }
+          items={categories.map((c, i) => ({
+            icon: CATEGORY_ICONS[c.key],
+            accent: BRAND_ACCENTS[i % BRAND_ACCENTS.length],
+            content: (
               <>
-                <span className="nx-eyebrow">03 — LEARNING WIKI</span>
-                <h2>
-                  경험/기술 <em>기록</em>
-                </h2>
+                <h3>{c.name}</h3>
+                <p>{c.description}</p>
+                <span className="nx-card-count">문서 {c.count}개</span>
               </>
-            }
-            items={categories.map((c, i) => ({
-              icon: CATEGORY_ICONS[c.key],
-              accent: BRAND_ACCENTS[i % BRAND_ACCENTS.length],
-              content: (
-                <>
-                  <h3>{c.name}</h3>
-                  <p>{c.description}</p>
-                  <span className="nx-card-count">문서 {c.count}개</span>
-                </>
-              ),
-            }))}
-          />
-        </div>
+            ),
+          }))}
+        />
         <DocList
           items={docs.slice(0, 10).map((d) => ({
             category: d.category,

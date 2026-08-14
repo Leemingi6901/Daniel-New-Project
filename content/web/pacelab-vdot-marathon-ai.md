@@ -1,8 +1,8 @@
 ---
 title: "PaceLab — VDOT 기반 마라톤 훈련 AI 분석 사이트 만들기"
 description: "러닝 기록과 인바디 데이터로 VDOT을 추정하고 대회 예상 기록·구간 페이스를 예측하는 개인 프로젝트 개발기"
-updated: "2026-07-27"
-tags: [Next.js, TypeScript, Vercel-Blob, VDOT, 마라톤]
+updated: "2026-08-14"
+tags: [Next.js, TypeScript, Vercel-Blob, VDOT, 마라톤, GitHub-Actions]
 ---
 
 개인 러닝 기록과 인바디 데이터를 넣으면 현재 체력(VDOT)을 추정하고, 다음 대회의 예상 PB와 구간(스플릿) 기록까지 예측해주는 개인용 사이트 **PaceLab**을 만든 과정. [pacelab-korea97.vercel.app](https://pacelab-korea97.vercel.app)에 배포되어 실제로 매일 훈련 기록을 넣으며 쓰고 있다.
@@ -111,6 +111,46 @@ NODE_EXTRA_CA_CERTS=D:\PaceLab\corporate-ca.pem
 ```
 
 같은 코드가 환경마다 다르게 실패할 수 있고, `catch`로 에러를 조용히 삼키면 원인 찾기가 몇 배로 힘들어진다는 걸 다시 확인한 하루였다.
+
+## 트러블슈팅 — Blob 사용량 폭증으로 인한 결제 정지
+
+어느 날 사이트에 접속했더니 에러 하나 없이 모든 데이터가 빈 상태로 보였다. `getData()`가 Blob 접근 실패를 조용히 삼키고 기본값을 반환하도록 짜둔 탓에, 정작 진짜 장애가 났을 때는 아무 신호도 없이 그냥 빈 화면만 나온 것이었다.
+
+`vercel` CLI로 스토어 상태를 직접 조회해 원인을 찾았다.
+
+```bash
+$ vercel blob get-store store_xxxxx
+
+Blob Store: pacelab-store
+Billing State: Inactive
+```
+
+결제 계정 문제로 스토어 자체가 정지돼 있었다. 그런데 평소 사용량은 Hobby 무료 한도(월 10,000 Advanced Operations)의 1%도 안 됐다 — 정지된 진짜 이유는 따로 있었다. GitHub Actions 로그를 뒤져보니, 과거 기록을 백필하려고 `days_back=1095`(3년치)로 수동 실행한 적이 있었고 그때 발견된 활동 64건을 **하나씩 개별 API 호출**로 저장하고 있었다.
+
+```ts
+export async function getData(): Promise<PaceLabData> {
+  const { blobs } = await list({ prefix: BLOB_PREFIX, limit: 30 }); // 1건
+}
+export async function saveData(data: PaceLabData): Promise<void> {
+  await put(...); // 1건
+  const { blobs } = await list({ prefix: BLOB_PREFIX, limit: 50 }); // 정리용, 1건
+}
+```
+
+`/api/data`에 POST 한 번마다 `getData()`+`saveData()`로 Advanced Operation이 3건씩 고정으로 붙는 구조라, 활동을 N개 발견하면 저장 비용도 그대로 N배로 곱해졌다. 64건짜리 백필 한 번이 192건, 여기에 그날의 다른 동기화 실행분까지 겹쳐 하루 400건 넘게 쓴 날이 여러 번 있었던 것.
+
+고친 방법은 저장 요청 자체를 배치로 묶는 것. 활동이 몇 개든 `getData()`/`saveData()`는 딱 한 번만 돌게 만들었다.
+
+```ts
+if (body.type === "batch") {
+  const data = await getData(); // list 1건
+  for (const e of body.entries ?? []) applyTrainingEntry(data, e);
+  await saveData(data); // put+list = 2건
+  // 활동이 1개든 64개든 총 3건 고정
+}
+```
+
+파이썬 동기화 스크립트도 활동을 발견하는 즉시 전송하던 걸, 전부 모아뒀다가 한 번에 POST하도록 바꿨다. 64건짜리 백필 기준 195건 → 3건으로 줄었다.
 
 ## 마무리
 

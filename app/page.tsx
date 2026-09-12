@@ -17,6 +17,7 @@ import {
   IconTrendingUp,
   IconCode,
   IconTools,
+  IconLanguage,
 } from "@tabler/icons-react";
 
 const BRAND_ACCENTS = ["34, 211, 238", "251, 113, 133", "163, 230, 53"];
@@ -165,6 +166,17 @@ export default function Home() {
                   Daniel <em>사주팔자</em>
                 </strong>
                 <p>생년월일시를 만세력으로 환산해 사주팔자를 분석하고, 나와 상대방의 궁합까지 점수화합니다.</p>
+              </div>
+              <span className="nx-banner-cta">→</span>
+            </a>
+            <a href="https://englishquest-ecru.vercel.app" target="_blank" rel="noreferrer" className="nx-banner-row">
+              <span className="nx-banner-tag">NEW</span>
+              <IconLanguage className="nx-banner-icon" size={20} stroke={1.8} />
+              <div className="nx-banner-row-text">
+                <strong>
+                  English<em>Quest</em>
+                </strong>
+                <p>완전 초급자가 미션을 깨며 AI와 짧은 영어 대화를 연습하는 앱. 리캐스트 방식으로 자연스럽게 교정해줍니다.</p>
               </div>
               <span className="nx-banner-cta">→</span>
             </a>

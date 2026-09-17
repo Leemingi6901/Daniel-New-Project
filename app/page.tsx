@@ -59,6 +59,15 @@ const PROJECTS = [
     linkLabel: "Private",
     icon: <IconRun size={56} stroke={1.4} />,
   },
+  {
+    name: "Work Tracker",
+    period: "2026",
+    description: "업무를 분류·중요도별로 관리하는 사내 업무 일지 대시보드. Vercel Blob을 DB처럼 써서 서버 없이 운영합니다.",
+    stack: ["Next.js", "Vercel Blob", "Vercel Cron"],
+    link: null,
+    linkLabel: "Private",
+    icon: <IconTools size={56} stroke={1.4} />,
+  },
 ];
 
 const INTERESTS = [

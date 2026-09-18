@@ -5,7 +5,7 @@ updated: "2026-09-17"
 tags: [Next.js, TypeScript, Vercel-Blob, Eventual-Consistency, 업무관리]
 ---
 
-회사에서 쓸 개인 업무 관리 대시보드 **W CONCEPT - Work Tracker**를 만든 과정. 보안/인프라/IT 지원/기타로 업무를 분류하고, 접수→진행중→완료 3단계로 상태를 관리하며, [task-tracker-virid-phi.vercel.app](https://task-tracker-virid-phi.vercel.app)에 배포해 실제로 매일 쓰고 있다.
+회사에서 쓸 개인 업무 관리 대시보드 **W CONCEPT - Work Tracker**를 만든 과정. 보안/인프라/IT 지원/기타로 업무를 분류하고, 접수→진행중→완료 3단계로 상태를 관리하며, [daniel-work-tracker.vercel.app](https://daniel-work-tracker.vercel.app)에 배포해 실제로 매일 쓰고 있다.
 
 ## 기술 스택
 

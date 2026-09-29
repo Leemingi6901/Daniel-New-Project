@@ -37,3 +37,6 @@ memory/
 openclaw-workspace-state.json
 .vercel
 .env*
+
+# TypeScript incremental build cache
+*.tsbuildinfo

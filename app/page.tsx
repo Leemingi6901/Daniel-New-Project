@@ -20,7 +20,8 @@ import {
   IconLanguage,
 } from "@tabler/icons-react";
 
-const BRAND_ACCENTS = ["34, 211, 238", "251, 113, 133", "163, 230, 53"];
+// 라이트·다크 바탕 모두에서 3:1 이상 보이는 중간 톤(업무일지 분류 팔레트와 같은 계열)
+const BRAND_ACCENTS = ["42, 120, 214", "227, 73, 72", "10, 143, 74"];
 
 const PROJECTS = [
   {

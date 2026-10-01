@@ -1,15 +1,75 @@
-@import "highlight.js/styles/github-dark.css";
 @import "pretendard/dist/web/static/pretendard-dynamic-subset.css";
 
+/* MG 디자인(업무일지와 같은 틀): 아이보리 바탕 + 먹색 글자 + 위키 포인트 색(파랑). 시스템 다크모드를 따른다. */
 :root {
-  --blue: #22d3ee;
-  --blue-light: rgba(34, 211, 238, 0.12);
-  --text: #e8ebf2;
-  --text-muted: #98a0b3;
-  --border: #1d2230;
-  --bg: #060709;
-  --bg-gray: #10131c;
+  color-scheme: light;
+  --bg: #faf9f5;
+  --bg-elevated: #f1efe6;
+  --surface: #ffffff;
+  --surface-hover: #f7f6f1;
+  --border: #e4e0d5;
+  --border-strong: #cfc9b8;
+  --text: #1a1a1a;
+  --text-secondary: #6b4a30;
+  --text-muted: #7a6a58;
+  --accent: #1d4ed8;
+  --accent-contrast: #ffffff;
+  --accent2: #be123c;
+  --accent3: #4d7c0f;
+  --font-sans: "Pretendard", -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Segoe UI", "Malgun Gothic", sans-serif;
+  --nx-display: var(--font-sans);
+  --nx-mono: var(--font-sans);
+
+  /* 예전 이름 호환 */
+  --blue: var(--accent);
+  --blue-light: color-mix(in oklab, var(--accent) 9%, transparent);
+  --bg-gray: var(--bg-elevated);
+
+  /* 코드 하이라이트 */
+  --code-keyword: #b42318;
+  --code-string: #0a6b3d;
+  --code-title: #6d28d9;
+  --code-number: #1d4ed8;
+  --code-comment: #7a6a58;
+  --code-attr: #9a5b00;
 }
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark;
+    --bg: #121110;
+    --bg-elevated: #22201c;
+    --surface: #1c1b18;
+    --surface-hover: #25231f;
+    --border: #2e2b26;
+    --border-strong: #45413a;
+    --text: #f3f0e8;
+    --text-secondary: #cdb89e;
+    --text-muted: #928675;
+    --accent: #7aa7ff;
+    --accent-contrast: #0b1430;
+    --accent2: #fb7185;
+    --accent3: #a3e635;
+
+    --code-keyword: #ff8a80;
+    --code-string: #7ee2a8;
+    --code-title: #c4a5ff;
+    --code-number: #7aa7ff;
+    --code-comment: #928675;
+    --code-attr: #f0c674;
+  }
+}
+
+.hljs { color: var(--text); background: transparent; }
+.hljs-comment, .hljs-quote { color: var(--code-comment); font-style: italic; }
+.hljs-keyword, .hljs-selector-tag, .hljs-built_in, .hljs-type, .hljs-literal, .hljs-meta .hljs-keyword { color: var(--code-keyword); }
+.hljs-string, .hljs-regexp, .hljs-addition, .hljs-meta .hljs-string { color: var(--code-string); }
+.hljs-title, .hljs-section, .hljs-title.function_, .hljs-title.class_ { color: var(--code-title); }
+.hljs-number, .hljs-symbol, .hljs-variable, .hljs-template-variable, .hljs-bullet { color: var(--code-number); }
+.hljs-attr, .hljs-attribute, .hljs-property, .hljs-params, .hljs-name, .hljs-selector-class, .hljs-selector-id { color: var(--code-attr); }
+.hljs-deletion { color: var(--code-keyword); }
+.hljs-emphasis { font-style: italic; }
+.hljs-strong { font-weight: 700; }
 
 * {
   margin: 0;
@@ -20,16 +80,26 @@
 /* 사이트 전체에 깔리는 배경 — 랜딩(.nx)과 위키 읽기 페이지(.site-*)가 같은 톤을 공유한다.
    장식용 별빛을 최소화하고 여백이 많은 순검정에 가까운 캔버스로 대비를 높였다. */
 body {
-  font-family: "Apple SD Gothic Neo", "Pretendard", -apple-system, sans-serif;
+  font-family: var(--font-sans);
   color: var(--text);
-  background:
-    radial-gradient(1.5px 1.5px at 12% 18%, rgba(255, 255, 255, 0.4), transparent),
-    radial-gradient(1.5px 1.5px at 68% 12%, rgba(255, 255, 255, 0.35), transparent),
-    radial-gradient(1.5px 1.5px at 90% 60%, rgba(255, 255, 255, 0.3), transparent),
-    radial-gradient(700px 520px at 15% 8%, rgba(34, 211, 238, 0.035), transparent 70%),
-    radial-gradient(700px 540px at 85% 96%, rgba(251, 113, 133, 0.03), transparent 70%),
-    var(--bg);
+  background: var(--bg);
   line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+}
+
+:focus-visible {
+  outline: 2px solid var(--text);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
 
 a {
@@ -39,26 +109,30 @@ a {
 
 /* Header */
 .site-header {
-  border-bottom: 1px solid var(--border);
   background: var(--bg);
   position: sticky;
   top: 0;
   z-index: 10;
+  padding: 12px 16px 0;
 }
 
 .header-inner {
   max-width: 1200px;
+  height: 54px;
   margin: 0 auto;
-  padding: 14px 24px;
+  padding: 0 8px 0 4px;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  border-radius: 12px;
+  background: var(--bg-elevated);
 }
 
 .logo {
-  font-size: 1.15rem;
-  font-weight: 800;
-  letter-spacing: -0.02em;
+  padding: 0 12px;
+  font-size: 1.125rem;
+  font-weight: 900;
+  letter-spacing: -0.03em;
   color: var(--text);
 }
 
@@ -66,14 +140,23 @@ a {
   color: var(--blue);
 }
 
+.header-nav {
+  display: flex;
+  gap: 4px;
+}
+
 .header-nav a {
-  margin-left: 20px;
-  color: var(--text-muted);
-  font-size: 0.95rem;
+  padding: 8px 12px;
+  border-radius: 8px;
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: background-color 150ms, color 150ms;
 }
 
 .header-nav a:hover {
-  color: var(--blue);
+  background: var(--surface);
+  color: var(--text);
 }
 
 /* Layout */
@@ -96,9 +179,9 @@ a {
 }
 
 .sidebar-section h3 {
-  font-size: 0.85rem;
-  color: var(--text-muted);
-  text-transform: uppercase;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--text-secondary);
   margin-bottom: 8px;
 }
 
@@ -112,15 +195,15 @@ a {
 
 .sidebar-section a {
   color: var(--text);
-  font-size: 0.95rem;
+  font-size: 0.9rem;
   display: block;
-  padding: 3px 8px;
-  border-radius: 6px;
+  padding: 5px 10px;
+  border-radius: 8px;
+  transition: background-color 150ms;
 }
 
 .sidebar-section a:hover {
-  background: var(--blue-light);
-  color: var(--blue);
+  background: var(--bg-elevated);
 }
 
 .site-main {
@@ -167,7 +250,7 @@ a {
   border: 1px solid var(--border);
   border-radius: 12px;
   padding: 20px;
-  background: var(--bg-gray);
+  background: var(--surface);
 }
 
 .category-card h3 {
@@ -319,7 +402,7 @@ a {
 }
 
 .doc-body blockquote {
-  border-left: 3px solid var(--blue);
+  border-left: 3px solid var(--accent);
   background: var(--blue-light);
   padding: 10px 16px;
   border-radius: 0 8px 8px 0;
@@ -348,24 +431,16 @@ a {
    nx-* : 다크 메인 홈 (뉴럴 네트워크 랜딩)
    ============================================ */
 .nx {
-  --nx-bg: #050608;
-  --nx-surface: #0e1017;
-  --nx-border: #1d2230;
-  --nx-text: #eef1f6;
-  --nx-muted: #8b93a7;
-  --nx-accent: #22d3ee;
-  --nx-accent2: #fb7185;
-  --nx-accent3: #a3e635;
-  /* animejs.com처럼 순검정에 가까운 캔버스 + 절제된 컬러 글로우 두 점만 남겨 대비를 높였다
-     (기존엔 별 9개 + 그리드 도트 패턴까지 겹쳐 콘텐츠와 경쟁하는 느낌이었다) */
-  background:
-    radial-gradient(1.5px 1.5px at 14% 16%, rgba(255, 255, 255, 0.4), transparent),
-    radial-gradient(1.5px 1.5px at 62% 10%, rgba(255, 255, 255, 0.32), transparent),
-    radial-gradient(1.5px 1.5px at 92% 30%, rgba(255, 255, 255, 0.36), transparent),
-    radial-gradient(1.5px 1.5px at 8% 82%, rgba(255, 255, 255, 0.28), transparent),
-    radial-gradient(650px 500px at 12% 8%, rgba(34, 211, 238, 0.045), transparent 70%),
-    radial-gradient(650px 520px at 88% 92%, rgba(251, 113, 133, 0.035), transparent 70%),
-    var(--nx-bg);
+  /* 랜딩도 사이트 공통 토큰을 그대로 쓴다(다크모드 자동). */
+  --nx-bg: var(--bg);
+  --nx-surface: var(--surface);
+  --nx-border: var(--border);
+  --nx-text: var(--text);
+  --nx-muted: var(--text-muted);
+  --nx-accent: var(--accent);
+  --nx-accent2: var(--accent2);
+  --nx-accent3: var(--accent3);
+  background: var(--nx-bg);
   color: var(--nx-text);
   min-height: 100vh;
 }
@@ -375,38 +450,53 @@ a {
   color: var(--nx-accent);
 }
 
+/* 업무일지와 같은 떠 있는 둥근 바 */
 .nx-header {
   position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
+  top: 12px;
+  left: 16px;
+  right: 16px;
   z-index: 20;
+  max-width: 1040px;
+  height: 54px;
+  margin: 0 auto;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 18px 40px;
-  background: linear-gradient(180deg, rgba(7, 8, 12, 0.9), rgba(7, 8, 12, 0));
+  padding: 0 8px 0 4px;
+  border-radius: 12px;
+  background: color-mix(in oklab, var(--bg-elevated) 92%, transparent);
+  backdrop-filter: blur(8px);
 }
 
 .nx-logo {
-  font-family: var(--nx-display), sans-serif;
-  font-weight: 700;
-  font-size: 1.2rem;
+  padding: 0 12px;
+  font-weight: 900;
+  font-size: 1.125rem;
   color: var(--nx-text);
-  letter-spacing: -0.02em;
+  letter-spacing: -0.03em;
 }
 
 .nx-logo span {
   color: var(--nx-accent);
 }
 
+.nx-header nav {
+  display: flex;
+  gap: 2px;
+}
+
 .nx-header nav a {
-  margin-left: 24px;
-  color: var(--nx-muted);
-  font-size: 0.92rem;
+  padding: 8px 12px;
+  border-radius: 8px;
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: background-color 150ms, color 150ms;
 }
 
 .nx-header nav a:hover {
+  background: var(--surface);
   color: var(--nx-text);
 }
 
@@ -423,29 +513,11 @@ a {
   overflow: hidden;
 }
 
-.nx-hero::before {
-  content: "";
-  position: absolute;
-  inset: -20%;
-  background:
-    radial-gradient(600px 400px at 25% 20%, rgba(34, 211, 238, 0.1), transparent 70%),
-    radial-gradient(560px 420px at 78% 30%, rgba(163, 230, 53, 0.07), transparent 70%),
-    radial-gradient(600px 400px at 60% 80%, rgba(251, 113, 133, 0.08), transparent 70%);
-  pointer-events: none;
-  animation: nx-aurora 22s ease-in-out infinite;
-}
-
-@keyframes nx-aurora {
-  0%, 100% { opacity: 0.9; transform: scale(1); }
-  50% { opacity: 0.78; transform: scale(1.03); }
-}
 
 .nx-hello {
   color: var(--nx-accent);
-  font-family: var(--nx-mono), monospace;
   font-size: 1rem;
   font-weight: 700;
-  letter-spacing: 0.1em;
   z-index: 1;
 }
 
@@ -453,7 +525,7 @@ a {
   position: relative;
   font-family: var(--nx-display), sans-serif;
   font-size: clamp(3.6rem, 10vw, 7.4rem);
-  font-weight: 700;
+  font-weight: 900;
   letter-spacing: -0.05em;
   line-height: 1.02;
   margin-top: 10px;
@@ -497,13 +569,13 @@ a {
   align-self: center;
   margin-top: 0.1em;
   margin-left: 0.15em;
-  box-shadow: 0 0 0 5px rgba(34, 211, 238, 0.12);
+  box-shadow: 0 0 0 5px color-mix(in oklab, var(--accent) 12%, transparent);
   transition: transform 0.25s, box-shadow 0.25s;
 }
 
 .nx-avatar-btn:hover {
   transform: scale(1.08);
-  box-shadow: 0 0 0 6px rgba(34, 211, 238, 0.18);
+  box-shadow: 0 0 0 6px color-mix(in oklab, var(--accent) 18%, transparent);
 }
 
 .nx-avatar-btn::before {
@@ -585,7 +657,7 @@ a {
   align-items: center;
   justify-content: center;
   padding: 24px;
-  background: rgba(3, 4, 7, 0.88);
+  background: rgba(0, 0, 0, 0.5);
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.2s ease;
@@ -602,9 +674,9 @@ a {
   max-height: 82vh;
   overflow-y: auto;
   overflow-x: hidden;
-  background: #10121a;
+  background: var(--surface);
   border: 1px solid var(--nx-border);
-  border-radius: 22px;
+  border-radius: 12px;
   padding: 32px 36px;
   text-align: left;
   transform: scale(0.96);
@@ -623,9 +695,9 @@ a {
   right: 16px;
   width: 30px;
   height: 30px;
-  border-radius: 50%;
+  border-radius: 8px;
   border: 1px solid var(--nx-border);
-  background: rgba(255, 255, 255, 0.04);
+  background: var(--bg-elevated);
   color: var(--nx-muted);
   cursor: pointer;
   font-size: 0.85rem;
@@ -676,10 +748,8 @@ a {
 .nx-modal-eyebrow {
   display: block;
   color: var(--nx-accent);
-  font-size: 0.72rem;
+  font-size: 0.8rem;
   font-weight: 700;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
   margin-bottom: 10px;
 }
 
@@ -706,9 +776,9 @@ a {
 }
 
 .nx-modal-project-stack span {
-  background: rgba(34, 211, 238, 0.12);
-  border: 1px solid rgba(34, 211, 238, 0.28);
-  color: #a5f3fc;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  color: var(--text-secondary);
   font-size: 0.76rem;
   font-weight: 600;
   padding: 4px 11px;
@@ -716,11 +786,9 @@ a {
 }
 
 .nx-modal h4 {
-  color: var(--nx-accent);
-  font-size: 0.72rem;
+  color: var(--text-secondary);
+  font-size: 0.8rem;
   font-weight: 700;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
   margin: 18px 0 10px;
 }
 
@@ -781,9 +849,9 @@ a {
 }
 
 .nx-profile-chips span {
-  background: rgba(34, 211, 238, 0.1);
-  border: 1px solid rgba(34, 211, 238, 0.26);
-  color: #a5f3fc;
+  background: color-mix(in oklab, var(--accent) 9%, transparent);
+  border: 1px solid color-mix(in oklab, var(--accent) 24%, transparent);
+  color: var(--accent);
   font-size: 0.7rem;
   font-weight: 600;
   padding: 3px 9px;
@@ -791,15 +859,15 @@ a {
 }
 
 .nx-profile-chips-skill span {
-  background: rgba(251, 113, 133, 0.1);
-  border-color: rgba(251, 113, 133, 0.26);
-  color: #fecdd3;
+  background: color-mix(in oklab, var(--accent2) 9%, transparent);
+  border-color: color-mix(in oklab, var(--accent2) 24%, transparent);
+  color: var(--accent2);
 }
 
 @media (max-width: 640px) {
   .nx-modal {
     padding: 22px 18px;
-    border-radius: 18px;
+    border-radius: 12px;
   }
 }
 
@@ -823,8 +891,8 @@ a {
   align-items: center;
   gap: 8px;
   color: var(--nx-muted);
-  font-size: 0.7rem;
-  letter-spacing: 0.25em;
+  font-size: 0.75rem;
+  letter-spacing: 0.05em;
 }
 
 .nx-scroll-hint i {
@@ -849,17 +917,14 @@ a {
 
 .nx-eyebrow {
   color: var(--nx-accent);
-  font-family: var(--nx-mono), monospace;
-  font-size: 0.78rem;
+  font-size: 0.875rem;
   font-weight: 700;
-  letter-spacing: 0.28em;
 }
 
 .nx-section h2 {
-  font-family: var(--nx-display), sans-serif;
   font-size: clamp(1.6rem, 3.4vw, 2.4rem);
-  font-weight: 700;
-  letter-spacing: -0.02em;
+  font-weight: 800;
+  letter-spacing: -0.03em;
   margin: 10px 0 36px;
 }
 
@@ -928,24 +993,24 @@ a {
 }
 
 .nx-scroll-visual {
-  --nx-scroll-accent: 34, 211, 238;
+  --nx-scroll-accent: 42, 120, 214;
   height: 260px;
-  border-radius: 24px;
+  border-radius: 12px;
   border: 1px solid var(--nx-border);
-  background: linear-gradient(160deg, rgba(255, 255, 255, 0.035), rgba(255, 255, 255, 0.008));
+  background: var(--surface);
   display: flex;
   align-items: center;
   justify-content: center;
   overflow: hidden;
   position: relative;
   transition: border-color 0.5s;
-  border-color: rgba(var(--nx-scroll-accent), 0.4);
+  border-color: rgba(var(--nx-scroll-accent), 0.35);
 }
 
 .nx-scroll-glow {
   position: absolute;
   inset: -40%;
-  background: radial-gradient(closest-side, rgba(var(--nx-scroll-accent), 0.22), transparent 70%);
+  background: radial-gradient(closest-side, rgba(var(--nx-scroll-accent), 0.12), transparent 70%);
   animation: nx-scroll-pulse 4.5s ease-in-out infinite;
   transition: background 0.5s;
   pointer-events: none;
@@ -1022,11 +1087,10 @@ a {
 }
 
 .nx-scroll-index {
-  font-family: var(--nx-mono), monospace;
-  font-size: 0.78rem;
+  font-size: 0.8rem;
   font-weight: 700;
   color: var(--nx-muted);
-  letter-spacing: 0.1em;
+  font-variant-numeric: tabular-nums;
   margin-bottom: 10px;
 }
 
@@ -1063,7 +1127,6 @@ a {
 .nx-card-count {
   display: inline-block;
   color: var(--nx-accent);
-  font-family: var(--nx-mono), monospace;
   font-size: 0.8rem;
   font-weight: 600;
   transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
@@ -1108,9 +1171,9 @@ a {
 }
 
 .nx-stack span {
-  background: rgba(34, 211, 238, 0.12);
-  border: 1px solid rgba(34, 211, 238, 0.28);
-  color: #a5f3fc;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  color: var(--text-secondary);
   font-size: 0.72rem;
   font-weight: 600;
   padding: 3px 9px;
@@ -1160,14 +1223,15 @@ a {
   gap: 20px;
   background: var(--nx-surface);
   border: 1px solid var(--nx-border);
-  border-radius: 14px;
+  border-radius: 12px;
   padding: 16px 22px;
   color: var(--nx-text);
-  transition: border-color 0.25s;
+  transition: border-color 0.2s, background-color 0.2s;
 }
 
 .nx-doc-row:hover {
-  border-color: var(--nx-accent);
+  border-color: var(--border-strong);
+  background: var(--surface-hover);
 }
 
 .nx-doc-row > div:first-child {
@@ -1225,16 +1289,15 @@ a {
 }
 
 .nx-doc-cat {
-  color: var(--nx-accent2);
-  font-family: var(--nx-mono), monospace;
-  font-size: 0.78rem;
+  color: var(--accent);
+  font-size: 0.8rem;
   font-weight: 600;
 }
 
 .nx-doc-side time {
   color: var(--nx-muted);
-  font-family: var(--nx-mono), monospace;
-  font-size: 0.78rem;
+  font-size: 0.8rem;
+  font-variant-numeric: tabular-nums;
 }
 
 /* CTA */
@@ -1255,28 +1318,37 @@ a {
 }
 
 .nx-btn {
-  background: var(--nx-accent);
-  color: #06231f;
-  padding: 12px 26px;
-  border-radius: 999px;
-  font-weight: 700;
-  font-size: 0.92rem;
-  transition: transform 0.2s, box-shadow 0.2s;
+  display: inline-flex;
+  align-items: center;
+  height: 2.75rem;
+  background: var(--text);
+  color: var(--surface);
+  padding: 0 1.25rem;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition: opacity 0.15s, transform 0.15s, border-color 0.15s;
 }
 
 .nx-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 10px 24px rgba(34, 211, 238, 0.25);
+  opacity: 0.85;
+}
+
+.nx-btn:active {
+  transform: scale(0.97);
 }
 
 .nx-btn-ghost {
-  background: none;
+  background: var(--surface);
   border: 1px solid var(--nx-border);
-  color: var(--nx-text);
+  color: var(--text-secondary);
+  font-weight: 500;
 }
 
 .nx-btn-ghost:hover {
-  border-color: var(--nx-accent);
+  opacity: 1;
+  border-color: var(--border-strong);
+  color: var(--nx-text);
 }
 
 .nx-footer {
@@ -1289,7 +1361,12 @@ a {
 
 @media (max-width: 768px) {
   .nx-header {
-    padding: 14px 20px;
+    left: 12px;
+    right: 12px;
+  }
+
+  .nx-header nav a {
+    padding: 8px 8px;
   }
 
   .nx-section {
@@ -1306,9 +1383,9 @@ a {
 
 .nx-banner-group {
   border: 1px solid var(--nx-border);
-  border-radius: 20px;
+  border-radius: 12px;
   overflow: hidden;
-  background: linear-gradient(160deg, rgba(14, 16, 23, 0.96), rgba(14, 16, 23, 0.9));
+  background: var(--surface);
 }
 
 .nx-banner-row {
@@ -1326,20 +1403,18 @@ a {
 }
 
 .nx-banner-row:hover {
-  background: rgba(34, 211, 238, 0.05);
+  background: var(--surface-hover);
   border-left-color: var(--nx-accent);
 }
 
 .nx-banner-tag {
   flex-shrink: 0;
   display: inline-block;
-  background: rgba(34, 211, 238, 0.12);
-  border: 1px solid rgba(34, 211, 238, 0.3);
+  background: color-mix(in oklab, var(--accent) 9%, transparent);
+  border: 1px solid color-mix(in oklab, var(--accent) 24%, transparent);
   color: var(--nx-accent);
-  font-family: var(--nx-mono), monospace;
-  font-size: 0.66rem;
-  font-weight: 800;
-  letter-spacing: 0.14em;
+  font-size: 0.72rem;
+  font-weight: 700;
   padding: 3px 9px;
   border-radius: 999px;
 }

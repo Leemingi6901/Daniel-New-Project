@@ -10,7 +10,10 @@ import {
   IconLayoutGrid,
   IconChevronLeft,
   IconChevronRight,
+  IconSearch,
+  IconX,
 } from "@tabler/icons-react";
+import { matchesQuery } from "@/lib/search";
 
 const PAGE_SIZE = 5;
 
@@ -21,6 +24,7 @@ export interface BrowserDoc {
   description: string;
   updated: string;
   pinned: boolean;
+  tags: string[];
 }
 
 export interface BrowserCategory {
@@ -47,8 +51,9 @@ function shortDate(d: string) {
 export default function DocsBrowser({ docs, categories }: { docs: BrowserDoc[]; categories: BrowserCategory[] }) {
   const [cat, setCat] = useState<string>("all");
   const [page, setPage] = useState(0);
+  const [query, setQuery] = useState("");
 
-  const list = cat === "all" ? docs : docs.filter((d) => d.category === cat);
+  const list = (cat === "all" ? docs : docs.filter((d) => d.category === cat)).filter((d) => matchesQuery(d, query));
   const pages = Math.max(1, Math.ceil(list.length / PAGE_SIZE));
   const current = Math.min(page, pages - 1);
   const shown = list.slice(current * PAGE_SIZE, current * PAGE_SIZE + PAGE_SIZE);
@@ -80,11 +85,35 @@ export default function DocsBrowser({ docs, categories }: { docs: BrowserDoc[]; 
 
       <div className="hm-panel hm-span-3">
         <div className="hm-panel-head">
-          <h2>최근 문서{cat !== "all" && <em> · {nameOf(cat)}</em>}</h2>
-          <span>
-            {list.length}개 · {current + 1}/{pages}쪽
-          </span>
+          <h2>
+            {query.trim() ? "검색 결과" : "최근 문서"}
+            {cat !== "all" && <em> · {nameOf(cat)}</em>}
+            <span className="hm-panel-meta">
+              {list.length}개 · {current + 1}/{pages}쪽
+            </span>
+          </h2>
+          <label className="hm-search">
+            <IconSearch size={15} stroke={2} />
+            <input
+              type="search"
+              value={query}
+              onChange={(e) => {
+                setQuery(e.target.value);
+                setPage(0);
+              }}
+              onKeyDown={(e) => e.key === "Escape" && setQuery("")}
+              placeholder="제목·요약·태그 검색"
+              aria-label="문서 검색"
+            />
+            {query && (
+              <button type="button" onClick={() => setQuery("")} aria-label="검색어 지우기">
+                <IconX size={14} stroke={2} />
+              </button>
+            )}
+          </label>
         </div>
+
+        {list.length === 0 && <p className="hm-empty">맞는 문서가 없어요. 다른 단어로 찾거나 카테고리를 전체로 바꿔 보세요.</p>}
 
         <ul className="hm-recent" key={`${cat}-${current}`}>
           {shown.map((d) => (

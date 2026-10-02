@@ -197,13 +197,14 @@ export default function Home() {
         <section id="docs" className="hm-docs">
           <Reveal className="hm-grid">
             <DocsBrowser
-              docs={docs.map(({ category, slug, title, description, updated, pinned }) => ({
+              docs={docs.map(({ category, slug, title, description, updated, pinned, tags }) => ({
                 category,
                 slug,
                 title,
                 description,
                 updated,
                 pinned,
+                tags,
               }))}
               categories={Object.entries(CATEGORIES).map(([key, c]) => ({ key, name: c.name }))}
             />

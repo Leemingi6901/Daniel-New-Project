@@ -93,7 +93,7 @@ export default function ProfileCard() {
           ))}
         </div>
         <button type="button" className="nx-btn nx-btn-ghost hm-profile-btn" onClick={() => setOpen(true)} aria-expanded={open}>
-          경력·학력 보기
+          프로필 보기
         </button>
       </div>
 

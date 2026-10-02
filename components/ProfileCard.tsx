@@ -9,6 +9,22 @@ import type { Profile } from "@/lib/profileData";
 
 type View = "view" | "pin" | "edit";
 
+/** 사진을 가운데 기준 정사각형 480px JPEG으로 줄인다(위치 정보 같은 EXIF도 함께 빠진다) */
+async function toSquareJpeg(file: File, size = 480): Promise<Blob> {
+  const bitmap = await createImageBitmap(file);
+  const side = Math.min(bitmap.width, bitmap.height);
+  const canvas = document.createElement("canvas");
+  canvas.width = size;
+  canvas.height = size;
+  const ctx = canvas.getContext("2d");
+  if (!ctx) throw new Error("canvas");
+  ctx.drawImage(bitmap, (bitmap.width - side) / 2, (bitmap.height - side) / 2, side, side, 0, 0, size, size);
+  bitmap.close();
+  return new Promise((resolve, reject) =>
+    canvas.toBlob((b) => (b ? resolve(b) : reject(new Error("toBlob"))), "image/jpeg", 0.88)
+  );
+}
+
 export default function ProfileCard({ profile: initial }: { profile: Profile }) {
   const router = useRouter();
   const [profile, setProfile] = useState(initial);
@@ -54,6 +70,33 @@ export default function ProfileCard({ profile: initial }: { profile: Profile }) 
     }
   };
 
+  const uploadPhoto = async (file: File): Promise<string | null> => {
+    if (!file.type.startsWith("image/")) {
+      setMessage({ tone: "error", text: "이미지 파일만 올릴 수 있어요." });
+      return null;
+    }
+    setBusy(true);
+    setMessage(null);
+    try {
+      const form = new FormData();
+      form.append("pin", pin);
+      form.append("file", await toSquareJpeg(file), "photo.jpg");
+      const res = await fetch("/api/profile/photo", { method: "POST", body: form });
+      const data = await res.json().catch(() => ({ ok: false, error: "응답을 읽지 못했어요." }));
+      if (!data.ok) {
+        setMessage({ tone: "error", text: data.error ?? "사진을 올리지 못했어요." });
+        return null;
+      }
+      setMessage({ tone: "ok", text: "사진을 올렸어요. 저장을 눌러야 프로필에 반영돼요." });
+      return data.url as string;
+    } catch {
+      setMessage({ tone: "error", text: "사진을 읽거나 올리지 못했어요. 다른 사진으로 시도해 주세요." });
+      return null;
+    } finally {
+      setBusy(false);
+    }
+  };
+
   const save = async (next: Profile) => {
     const saved = await call({ action: "save", pin, profile: next });
     if (saved) {
@@ -87,7 +130,7 @@ export default function ProfileCard({ profile: initial }: { profile: Profile }) 
           {profile.experience[0] && ` · ${profile.experience[0].role}`}
         </p>
         <div className="hm-stack">
-          {profile.skills.slice(0, 10).map((s) => (
+          {profile.skills.map((s) => (
             <span key={s}>{s}</span>
           ))}
         </div>
@@ -107,6 +150,7 @@ export default function ProfileCard({ profile: initial }: { profile: Profile }) 
               setMessage(null);
             }}
             onSave={save}
+            onUploadPhoto={uploadPhoto}
           />
         ) : (
           <>

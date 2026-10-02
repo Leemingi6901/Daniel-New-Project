@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { IconPlus, IconX } from "@tabler/icons-react";
+import { IconPhoto, IconPlus, IconX } from "@tabler/icons-react";
 import type { Education, Experience, Profile } from "@/lib/profileData";
 
 interface Props {
@@ -10,6 +10,7 @@ interface Props {
   message: { tone: "error" | "ok"; text: string } | null;
   onCancel: () => void;
   onSave: (p: Profile) => void;
+  onUploadPhoto: (file: File) => Promise<string | null>;
 }
 
 const splitWords = (v: string) =>
@@ -19,7 +20,7 @@ const splitWords = (v: string) =>
     .filter(Boolean);
 
 /** 프로필 수정 양식 — 비밀번호 확인을 통과한 뒤에만 열린다 */
-export default function ProfileEditor({ profile, busy, message, onCancel, onSave }: Props) {
+export default function ProfileEditor({ profile, busy, message, onCancel, onSave, onUploadPhoto }: Props) {
   const [form, setForm] = useState(profile);
   const [certs, setCerts] = useState(profile.certs.join(", "));
   const [skills, setSkills] = useState(profile.skills.join(", "));
@@ -38,6 +39,29 @@ export default function ProfileEditor({ profile, busy, message, onCancel, onSave
   return (
     <form className="pf-form" onSubmit={submit}>
       <h3 className="pf-title">프로필 수정</h3>
+
+      <div className="pf-photo">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src={form.photo} alt="프로필 사진" />
+        <div>
+          <label className="pf-add pf-photo-btn">
+            <IconPhoto size={14} stroke={2} /> 사진 바꾸기
+            <input
+              type="file"
+              accept="image/*"
+              disabled={busy}
+              onChange={async (e) => {
+                const file = e.target.files?.[0];
+                e.target.value = "";
+                if (!file) return;
+                const url = await onUploadPhoto(file);
+                if (url) set("photo", url);
+              }}
+            />
+          </label>
+          <p>가운데를 기준으로 정사각형으로 잘려요.</p>
+        </div>
+      </div>
 
       <div className="pf-grid">
         <label>
@@ -128,7 +152,7 @@ export default function ProfileEditor({ profile, busy, message, onCancel, onSave
           <textarea value={certs} onChange={(e) => setCerts(e.target.value)} rows={2} />
         </label>
         <label className="pf-wide">
-          스킬 <small>쉼표로 구분 · 앞의 10개가 홈 카드에 보여요</small>
+          스킬 <small>쉼표로 구분 · 모두 홈 카드에 보여요</small>
           <textarea value={skills} onChange={(e) => setSkills(e.target.value)} rows={2} />
         </label>
       </div>

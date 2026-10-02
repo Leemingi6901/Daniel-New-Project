@@ -98,8 +98,20 @@ const list = <T,>(v: unknown, max: number, map: (x: Record<string, unknown>) => 
 const words = (v: unknown, max: number) =>
   Array.isArray(v) ? v.map((x) => str(x, 40)).filter(Boolean).slice(0, max) : [];
 
+/** 사진은 사이트 기본 파일이거나, 이 사이트 Blob 저장소의 profile/photo 경로만 허용한다 */
+export function isAllowedPhoto(url: unknown): url is string {
+  if (url === DEFAULT_PROFILE.photo) return true;
+  if (typeof url !== "string" || url.length > 300) return false;
+  try {
+    const u = new URL(url);
+    return u.protocol === "https:" && u.hostname.endsWith(".public.blob.vercel-storage.com") && u.pathname.startsWith("/profile/photo");
+  } catch {
+    return false;
+  }
+}
+
 /** 저장·표시 전에 모양과 길이를 맞춘다. 이름이 비면 잘못된 값으로 본다. */
-export function sanitizeProfile(raw: unknown, photo = DEFAULT_PROFILE.photo): Profile | null {
+export function sanitizeProfile(raw: unknown, fallbackPhoto = DEFAULT_PROFILE.photo): Profile | null {
   if (!raw || typeof raw !== "object") return null;
   const r = raw as Record<string, unknown>;
   const p: Profile = {
@@ -107,7 +119,7 @@ export function sanitizeProfile(raw: unknown, photo = DEFAULT_PROFILE.photo): Pr
     role: str(r.role, 80),
     summary: str(r.summary, 400),
     career: str(r.career, 40),
-    photo, // 사진은 사이트 파일을 쓰고 화면에서 바꾸지 않는다
+    photo: isAllowedPhoto(r.photo) ? r.photo : fallbackPhoto,
     experience: list(r.experience, 20, (x) => ({
       company: str(x.company, 80),
       period: str(x.period, 40),

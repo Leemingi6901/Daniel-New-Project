@@ -5,6 +5,7 @@ import { DEFAULT_PROFILE, sanitizeProfile, type Profile } from "@/lib/profileDat
 
 // 저장할 때마다 새 이름(무작위 접미사)으로 올려 CDN 캐시 문제를 피하고, 최근 10개를 이력으로 남긴다
 const PROFILE_PREFIX = "profile/profile";
+const PHOTO_PREFIX = "profile/photo";
 const KEEP_VERSIONS = 10;
 // 틀린 시도는 빈 표식 파일로 남긴다 — 내용을 읽지 않고 목록만 세면 되므로 캐시 영향이 없다
 const FAIL_PREFIX = "profile/fail-";
@@ -41,6 +42,18 @@ export async function saveProfile(profile: Profile): Promise<void> {
   });
   const old = (await versions()).slice(KEEP_VERSIONS).map((b) => b.url);
   if (old.length) await del(old);
+}
+
+/** 사진 올리기 — 화면에서 줄인 JPEG을 받는다. 이전 사진은 프로필 이력과 맞춰 최근 10장만 남긴다 */
+export async function savePhoto(file: Blob): Promise<string> {
+  const blob = await put(`${PHOTO_PREFIX}.jpg`, file, { access: "public", addRandomSuffix: true, contentType: "image/jpeg" });
+  const { blobs } = await list({ prefix: PHOTO_PREFIX });
+  const old = blobs
+    .sort((a, b) => b.uploadedAt.getTime() - a.uploadedAt.getTime())
+    .slice(KEEP_VERSIONS)
+    .map((b) => b.url);
+  if (old.length) await del(old);
+  return blob.url;
 }
 
 export function pinMatches(input: string): boolean {

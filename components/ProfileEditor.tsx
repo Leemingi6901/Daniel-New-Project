@@ -128,7 +128,7 @@ export default function ProfileEditor({ profile, busy, message, onCancel, onSave
           <textarea value={certs} onChange={(e) => setCerts(e.target.value)} rows={2} />
         </label>
         <label className="pf-wide">
-          스킬 <small>쉼표로 구분 · 앞의 5개가 홈 카드에 보여요</small>
+          스킬 <small>쉼표로 구분 · 앞의 10개가 홈 카드에 보여요</small>
           <textarea value={skills} onChange={(e) => setSkills(e.target.value)} rows={2} />
         </label>
       </div>

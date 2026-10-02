@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { IconBuilding } from "@tabler/icons-react";
 import Modal from "@/components/Modal";
 import ProfileEditor from "@/components/ProfileEditor";
 import type { Profile } from "@/lib/profileData";
@@ -75,12 +76,18 @@ export default function ProfileCard({ profile: initial }: { profile: Profile }) 
             <span>{profile.role}</span>
           </div>
         </div>
+        {profile.experience[0] && (
+          <p className="hm-profile-company">
+            <IconBuilding size={15} stroke={1.8} />
+            {profile.experience[0].company}
+          </p>
+        )}
         <p className="hm-profile-now">
           <b>{profile.career}</b>
           {profile.experience[0] && ` · ${profile.experience[0].role}`}
         </p>
         <div className="hm-stack">
-          {profile.skills.slice(0, 5).map((s) => (
+          {profile.skills.slice(0, 10).map((s) => (
             <span key={s}>{s}</span>
           ))}
         </div>

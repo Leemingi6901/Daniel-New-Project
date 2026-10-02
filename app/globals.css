@@ -1236,6 +1236,21 @@ a {
   font-size: 0.82rem;
 }
 
+.hm-profile-company {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: -8px;
+  color: var(--nx-text);
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.hm-profile-company svg {
+  flex-shrink: 0;
+  color: var(--accent);
+}
+
 .hm-profile-now {
   color: var(--nx-muted);
   font-size: 0.84rem;

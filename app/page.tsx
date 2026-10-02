@@ -293,6 +293,7 @@ export default function Home() {
             title: d.title,
             description: d.description,
             updated: d.updated,
+            pinned: d.pinned,
           }))}
         />
       </section>

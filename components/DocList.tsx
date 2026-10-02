@@ -8,6 +8,7 @@ interface Doc {
   title: string;
   description: string;
   updated: string;
+  pinned?: boolean;
 }
 
 export default function DocList({ items }: { items: Doc[] }) {
@@ -17,7 +18,10 @@ export default function DocList({ items }: { items: Doc[] }) {
         <Reveal key={`${d.category}/${d.slug}`} className={`delay-${i % 5}`}>
           <Link href={`/wiki/${d.category}/${d.slug}`} className="nx-doc-row">
             <div>
-              <strong>{d.title}</strong>
+              <strong>
+                {d.pinned && <span className="nx-doc-pin">고정</span>}
+                {d.title}
+              </strong>
               <p>{d.description}</p>
             </div>
             <div className="nx-doc-side">

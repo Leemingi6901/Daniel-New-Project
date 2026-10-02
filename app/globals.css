@@ -323,6 +323,7 @@ a {
 
 .doc-meta {
   display: flex;
+  flex-wrap: wrap;
   gap: 10px;
   align-items: center;
   color: var(--text-muted);
@@ -407,6 +408,20 @@ a {
   padding: 10px 16px;
   border-radius: 0 8px 8px 0;
   margin: 16px 0;
+}
+
+.doc-body img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin: 16px auto 4px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+}
+
+/* 세로로 긴 캡처(슬랙 메시지, 휴대폰 화면)는 주소 끝에 #narrow를 붙여 폭을 줄인다 */
+.doc-body img[src$="#narrow"] {
+  max-width: min(100%, 380px);
 }
 
 /* Mobile */
@@ -1286,6 +1301,18 @@ a {
     width: 100%;
     justify-content: space-between;
   }
+}
+
+.nx-doc-pin {
+  display: inline-block;
+  margin-right: 8px;
+  padding: 1px 8px;
+  border-radius: 999px;
+  background: var(--blue-light);
+  color: var(--accent);
+  font-size: 0.75rem;
+  font-weight: 700;
+  vertical-align: 2px;
 }
 
 .nx-doc-cat {

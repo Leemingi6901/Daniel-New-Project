@@ -28,6 +28,7 @@ npm run build   # 프로덕션 빌드 (전체 정적 생성)
    description: "한 줄 요약"
    updated: "YYYY-MM-DD"
    tags: [태그1, 태그2]
+   pinned: true   # 선택: 홈 최근 문서·사이드바 맨 위에 고정
    ---
    ```
 3. 커밋 & 푸시하면 Vercel이 자동 배포

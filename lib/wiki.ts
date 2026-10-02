@@ -25,6 +25,7 @@ export interface WikiDocMeta {
   description: string;
   updated: string; // YYYY-MM-DD
   tags: string[];
+  pinned: boolean; // frontmatter `pinned: true`면 목록 맨 위에 고정
 }
 
 export interface WikiDoc extends WikiDocMeta {
@@ -45,6 +46,7 @@ function parseMeta(category: string, slug: string, raw: string): { meta: WikiDoc
       description: data.description ?? "",
       updated: data.updated ?? "",
       tags: data.tags ?? [],
+      pinned: data.pinned === true,
     },
     body: content,
   };
@@ -62,7 +64,7 @@ export function listDocs(): WikiDocMeta[] {
       docs.push(parseMeta(category, slug, raw).meta);
     }
   }
-  return docs.sort((a, b) => (a.updated < b.updated ? 1 : -1));
+  return docs.sort((a, b) => Number(b.pinned) - Number(a.pinned) || (a.updated < b.updated ? 1 : -1));
 }
 
 export async function getDoc(category: string, slug: string): Promise<WikiDoc | null> {

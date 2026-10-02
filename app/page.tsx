@@ -2,6 +2,7 @@ import Link from "next/link";
 import type { ReactNode } from "react";
 import { CATEGORIES, listDocs } from "@/lib/wiki";
 import ProfileCard from "@/components/ProfileCard";
+import { getProfile } from "@/lib/profileStore";
 import Reveal from "@/components/Reveal";
 import DocsBrowser from "@/components/DocsBrowser";
 import {
@@ -145,8 +146,9 @@ function ProjectLink({ p }: { p: Project }) {
   );
 }
 
-export default function Home() {
+export default async function Home() {
   const docs = listDocs();
+  const profile = await getProfile();
   const lastUpdated = docs.reduce((m, d) => (d.updated > m ? d.updated : m), "");
   return (
     <div className="nx">
@@ -169,7 +171,10 @@ export default function Home() {
         <section className="hm-grid hm-hero">
           <div className="hm-intro hm-span-2">
             <p className="nx-hello">Daniel Tech Wiki</p>
-            <h1>Daniel</h1>
+            <div className="hm-name">
+              <h1>Daniel</h1>
+              <span className="hm-name-sub">[ 이 민 기 | Lee Mingi ]</span>
+            </div>
             <p className="nx-tagline">
               인프라 엔지니어 이민기의 기술 위키입니다.
               <br />
@@ -190,7 +195,7 @@ export default function Home() {
               </div>
             </dl>
           </div>
-          <ProfileCard />
+          <ProfileCard profile={profile} />
         </section>
 
         {/* 문서: 최근 문서(2칸, 카테고리 탭 + 5개씩, 추천글은 맨 위) + 카테고리(1칸) */}

@@ -1157,6 +1157,21 @@ a {
   justify-content: center;
 }
 
+.hm-name {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 4px 18px;
+}
+
+.hm-name-sub {
+  color: var(--text-secondary);
+  font-size: clamp(1rem, 1.8vw, 1.35rem);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+
 .hm-intro .nx-tagline {
   margin-top: 12px;
   font-size: 1rem;
@@ -1763,5 +1778,179 @@ a {
   .hm-section-head {
     flex-direction: column;
     gap: 2px;
+  }
+}
+
+/* 프로필 수정 — 비밀번호 확인과 편집 양식(팝업 안) */
+.pf-foot {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 28px;
+  padding-top: 16px;
+  border-top: 1px solid var(--nx-border);
+}
+
+.pf-sticky {
+  position: sticky;
+  bottom: -32px;
+  margin: 24px -36px -32px;
+  padding: 14px 36px;
+  background: var(--surface);
+}
+
+.pf-msg {
+  margin-right: auto;
+  font-size: 0.85rem;
+}
+
+.pf-msg.is-error {
+  color: var(--accent2);
+}
+
+.pf-msg.is-ok {
+  color: var(--accent3);
+}
+
+.pf-pin {
+  display: flex;
+  gap: 8px;
+}
+
+.pf-pin input,
+.pf-form input,
+.pf-form textarea {
+  width: 100%;
+  min-width: 0;
+  padding: 8px 10px;
+  border: 1px solid var(--nx-border);
+  border-radius: 8px;
+  background: var(--bg);
+  color: var(--nx-text);
+  font: inherit;
+  font-size: 0.9rem;
+}
+
+.pf-pin input {
+  width: 140px;
+  height: 2.75rem;
+}
+
+.pf-pin input:focus,
+.pf-form input:focus,
+.pf-form textarea:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+.pf-form textarea {
+  resize: vertical;
+  line-height: 1.6;
+}
+
+.pf-title {
+  font-size: 1.2rem;
+  margin-bottom: 16px;
+}
+
+.pf-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px 12px;
+}
+
+.pf-grid label {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  color: var(--text-secondary);
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.pf-grid label small {
+  color: var(--nx-muted);
+  font-weight: 400;
+}
+
+.pf-wide {
+  grid-column: 1 / -1;
+}
+
+.pf-section-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 24px 0 8px;
+}
+
+.pf-section-head h4 {
+  margin: 0;
+}
+
+.pf-add {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  border: 1px solid var(--nx-border);
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--accent);
+  font: inherit;
+  font-size: 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.pf-row {
+  position: relative;
+  margin-bottom: 10px;
+  padding: 14px 14px 12px;
+  border: 1px solid var(--nx-border);
+  border-radius: 10px;
+}
+
+.pf-row .pf-grid {
+  padding-right: 28px;
+}
+
+.pf-remove {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  display: inline-flex;
+  padding: 4px;
+  border: 0;
+  border-radius: 6px;
+  background: var(--bg-elevated);
+  color: var(--nx-muted);
+  cursor: pointer;
+}
+
+.pf-remove:hover {
+  color: var(--accent2);
+}
+
+@media (max-width: 640px) {
+  .pf-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .pf-sticky {
+    bottom: -22px;
+    margin: 24px -18px -22px;
+    padding: 12px 18px;
+  }
+
+  .pf-pin {
+    width: 100%;
+  }
+
+  .pf-pin input {
+    flex: 1;
+    width: auto;
   }
 }

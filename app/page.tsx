@@ -3,6 +3,7 @@ import type { ReactNode } from "react";
 import { CATEGORIES, listDocs } from "@/lib/wiki";
 import ProfileCard from "@/components/ProfileCard";
 import Reveal from "@/components/Reveal";
+import DocsBrowser from "@/components/DocsBrowser";
 import {
   IconShieldCheck,
   IconRun,
@@ -13,10 +14,7 @@ import {
   IconBook2,
   IconRobot,
   IconTrendingUp,
-  IconCode,
-  IconTools,
   IconLanguage,
-  IconPin,
   IconClipboardCheck,
 } from "@tabler/icons-react";
 
@@ -128,13 +126,6 @@ const INTERESTS = [
   },
 ];
 
-const CATEGORY_ICONS: Record<string, ReactNode> = {
-  ai: <IconBrain size={18} stroke={1.7} />,
-  web: <IconCode size={18} stroke={1.7} />,
-  infra: <IconServer2 size={18} stroke={1.7} />,
-  tools: <IconTools size={18} stroke={1.7} />,
-};
-
 function shortDate(d: string) {
   return d ? `${d.slice(5, 7)}.${d.slice(8, 10)}` : "";
 }
@@ -156,15 +147,7 @@ function ProjectLink({ p }: { p: Project }) {
 
 export default function Home() {
   const docs = listDocs();
-  const pinned = docs.find((d) => d.pinned);
-  const recent = docs.filter((d) => d !== pinned).slice(0, 9);
   const lastUpdated = docs.reduce((m, d) => (d.updated > m ? d.updated : m), "");
-  const categories = Object.entries(CATEGORIES).map(([key, cat]) => {
-    const list = docs.filter((d) => d.category === key);
-    return { key, name: cat.name, count: list.length, top: list.slice(0, 3) };
-  });
-  const maxCount = Math.max(1, ...categories.map((c) => c.count));
-
   return (
     <div className="nx">
       <header className="nx-header">
@@ -182,14 +165,11 @@ export default function Home() {
       </header>
 
       <main className="hm">
-        {/* 첫 화면: 소개 + 고정 글 */}
-        <section className="hm-hero">
-          <div className="hm-intro">
+        {/* 첫 화면: 소개(2칸) + 프로필(1칸) */}
+        <section className="hm-grid hm-hero">
+          <div className="hm-intro hm-span-2">
             <p className="nx-hello">Daniel Tech Wiki</p>
-            <div className="nx-hero-title">
-              <h1>Daniel</h1>
-              <ProfileCard />
-            </div>
+            <h1>Daniel</h1>
             <p className="nx-tagline">
               인프라 엔지니어 이민기의 기술 위키입니다.
               <br />
@@ -210,67 +190,23 @@ export default function Home() {
               </div>
             </dl>
           </div>
-
-          {pinned && (
-            <Link href={`/wiki/${pinned.category}/${pinned.slug}`} className="hm-pinned">
-              <span className="hm-pinned-tag">
-                <IconPin size={14} stroke={2} /> 고정 글
-              </span>
-              <strong>{pinned.title}</strong>
-              <p>{pinned.description}</p>
-              <span className="hm-pinned-foot">
-                {CATEGORIES[pinned.category]?.name} · {pinned.updated}
-                <span className="hm-arrow">읽기 →</span>
-              </span>
-            </Link>
-          )}
+          <ProfileCard />
         </section>
 
-        {/* 문서: 최근 문서 + 카테고리 */}
-        <section className="hm-docs" id="docs">
-          <Reveal className="hm-panel">
-            <div className="hm-panel-head">
-              <h2>최근 문서</h2>
-              <span>{docs.length}개 중 최신순</span>
-            </div>
-            <ul className="hm-recent">
-              {recent.map((d) => (
-                <li key={`${d.category}/${d.slug}`}>
-                  <Link href={`/wiki/${d.category}/${d.slug}`} title={d.description}>
-                    <time>{shortDate(d.updated)}</time>
-                    <span className="hm-recent-title">{d.title}</span>
-                    <span className="hm-recent-cat">{CATEGORIES[d.category]?.name}</span>
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </Reveal>
-
-          <Reveal className="hm-panel delay-1">
-            <div className="hm-panel-head">
-              <h2>카테고리</h2>
-            </div>
-            <ul className="hm-cats">
-              {categories.map((c) => (
-                <li key={c.key}>
-                  <div className="hm-cat-head">
-                    <span className="hm-cat-icon">{CATEGORY_ICONS[c.key]}</span>
-                    <strong>{c.name}</strong>
-                    <span className="hm-cat-count">{c.count}</span>
-                  </div>
-                  <div className="hm-cat-bar" aria-hidden>
-                    <i style={{ width: `${(c.count / maxCount) * 100}%` }} />
-                  </div>
-                  <ul className="hm-cat-docs">
-                    {c.top.map((d) => (
-                      <li key={d.slug}>
-                        <Link href={`/wiki/${d.category}/${d.slug}`}>{d.title}</Link>
-                      </li>
-                    ))}
-                  </ul>
-                </li>
-              ))}
-            </ul>
+        {/* 문서: 최근 문서(2칸, 카테고리 탭 + 5개씩, 추천글은 맨 위) + 카테고리(1칸) */}
+        <section id="docs" className="hm-docs">
+          <Reveal className="hm-grid">
+            <DocsBrowser
+              docs={docs.map(({ category, slug, title, description, updated, pinned }) => ({
+                category,
+                slug,
+                title,
+                description,
+                updated,
+                pinned,
+              }))}
+              categories={Object.entries(CATEGORIES).map(([key, c]) => ({ key, name: c.name }))}
+            />
           </Reveal>
         </section>
 
@@ -280,7 +216,7 @@ export default function Home() {
             <h2>직접 만들고 운영하는 것들</h2>
             <p>운영 중인 서비스는 바로 써 볼 수 있습니다.</p>
           </div>
-          <Reveal stagger className="hm-proj-grid">
+          <Reveal stagger className="hm-grid">
             {PROJECTS.map((p) => (
               <article key={p.name} className="hm-proj">
                 <div className="hm-proj-head">
@@ -307,7 +243,7 @@ export default function Home() {
           <div className="hm-section-head">
             <h2>요즘 집중하는 것</h2>
           </div>
-          <Reveal stagger className="hm-interests">
+          <Reveal stagger className="hm-grid">
             {INTERESTS.map((it) => (
               <div key={it.title} className="hm-interest">
                 <span className="hm-proj-icon">{it.icon}</span>

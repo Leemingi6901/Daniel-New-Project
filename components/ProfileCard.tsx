@@ -8,6 +8,7 @@ const RESUME = {
   role: "인프라 엔지니어 · 정보보안 전문가",
   summary:
     "경력 5년 2개월 · AI/GPU 인프라부터 네트워크 보안까지, IT 라이프사이클 전반을 다뤄온 인프라 엔지니어입니다.",
+  career: "경력 5년 2개월",
   photo: "/profile.jpg",
   experience: [
     {
@@ -74,23 +75,26 @@ export default function ProfileCard() {
 
   return (
     <>
-      <div className="nx-avatar-group">
-        <button
-          type="button"
-          className="nx-avatar-btn"
-          onClick={() => setOpen((v) => !v)}
-          aria-expanded={open}
-          aria-label={`${RESUME.name} 프로필 보기`}
-        >
-          <span className="nx-avatar-photo-wrap">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={RESUME.photo} alt={RESUME.name} />
-          </span>
+      <div className="hm-profile">
+        <div className="hm-profile-head">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img className="hm-profile-photo" src={RESUME.photo} alt={RESUME.name} />
+          <div>
+            <strong>{RESUME.name}</strong>
+            <span>{RESUME.role}</span>
+          </div>
+        </div>
+        <p className="hm-profile-now">
+          <b>{RESUME.career}</b> · {RESUME.experience[0].role}
+        </p>
+        <div className="hm-stack">
+          {RESUME.skills.slice(0, 5).map((s) => (
+            <span key={s}>{s}</span>
+          ))}
+        </div>
+        <button type="button" className="nx-btn nx-btn-ghost hm-profile-btn" onClick={() => setOpen(true)} aria-expanded={open}>
+          경력·학력 보기
         </button>
-        <span className="nx-avatar-hint" aria-hidden="true">
-          프로필 보러가기
-          <em>Click →</em>
-        </span>
       </div>
 
       <Modal open={open} onClose={() => setOpen(false)}>

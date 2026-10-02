@@ -916,7 +916,25 @@ a {
 /* 첫 화면: 소개(2칸) + 프로필(1칸) */
 .hm-hero {
   align-items: stretch;
-  padding: 24px 0 40px;
+  gap: 0;
+  margin: 20px 0 16px;
+  padding: 32px 0;
+  border-radius: 14px;
+  background: var(--surface);
+  border: 1px solid var(--nx-border);
+}
+
+.hm-hero .hm-intro {
+  padding: 0 36px;
+}
+
+/* 한 칸 안에서 오른쪽 섹션으로 — 카드 대신 구분선 */
+.hm-hero .hm-profile {
+  padding: 4px 32px;
+  border: 0;
+  border-left: 1px solid var(--nx-border);
+  border-radius: 0;
+  background: none;
 }
 
 .hm-intro {
@@ -1407,6 +1425,14 @@ a {
     grid-column: 1 / -1;
   }
 
+  .hm-hero .hm-profile {
+    grid-column: 1 / -1;
+    margin: 24px 36px 0;
+    padding: 22px 0 0;
+    border-left: 0;
+    border-top: 1px solid var(--nx-border);
+  }
+
   .hm-cat-row {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
@@ -1426,8 +1452,18 @@ a {
   }
 
   .hm-hero {
-    padding-top: 12px;
-    padding-bottom: 28px;
+    margin-top: 8px;
+    padding: 24px 0;
+  }
+
+  .hm-hero .hm-intro,
+  .hm-hero .hm-profile {
+    padding: 0 20px;
+  }
+
+  .hm-hero .hm-profile {
+    margin: 22px 20px 0;
+    padding: 22px 0 0;
   }
 
   .hm-cat-row {
